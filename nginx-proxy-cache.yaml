@@ -1,0 +1,121 @@
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+    name: nginx-proxy-caching
+spec:
+  runPolicy: Serial
+  source:
+    dockerfile: |
+      FROM nginx:stable
+      RUN apt-get update && \
+          apt-get install -y \
+            nano \
+            wget && \
+            rm -rf /var/cache/apt
+
+      RUN wget https://raw.githubusercontent.com/wmuldergov/nginxtest/main/nginx.conf
+      RUN wget https://raw.githubusercontent.com/wmuldergov/nginxtest/main/index.html
+      RUN wget https://raw.githubusercontent.com/wmuldergov/nginxtest/main/nocachetest.html
+      RUN mv index.html /usr/share/nginx/html
+      RUN mv nocachetest.html /usr/share/nginx/html
+      RUN mv nginx.conf /etc/nginx/nginx.conf
+      RUN chmod -R 777 /var/cache/nginx
+      RUN chmod -R 777 /var/log/nginx
+      CMD /usr/sbin/nginx -g 'daemon off;'
+
+  strategy:
+    type: Docker
+    dockerStrategy:
+      noCache: false
+  output:
+    to:
+      kind: ImageStreamTag
+      name: "nginx-proxy-caching:latest"
+
+---
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: nginx-proxy-caching
+spec:
+  lookupPolicy:
+    local: false
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  annotations:
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"nginx-proxy-caching:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"nginx\")].image"}]
+  name: nginx-proxy-caching
+  labels:
+    app: nginx-proxy-caching
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-proxy-caching
+  template:
+    metadata:
+      labels:
+        app: nginx-proxy-caching
+    spec:
+      containers:
+        - resources: {}
+          stdin: true
+          terminationMessagePath: /dev/termination-log
+          name: nginx
+          imagePullPolicy: Always
+          terminationMessagePolicy: File
+          tty: true
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/80c8d5-dev/nginx-proxy-caching:latest
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 5
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nginx-proxy-caching
+  name: nginx-proxy-caching
+spec:
+  ports:
+  - name: nginx
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: nginx-proxy-caching
+  sessionAffinity: None
+  type: ClusterIP
+
+
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: nginx-proxy-caching
+spec:
+  # hostname: Automatically set if we don't set it
+  port:
+    targetPort: nginx
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: nginx-proxy-caching
+    weight: 100
+  wildcardPolicy: None
+
+
+---
+#oc delete buildconfig nginx-proxy-caching
+#oc delete imagestream nginx-proxy-caching
+#oc delete deployment nginx-proxy-caching
+#oc delete service nginx-proxy-caching
+#oc delete route nginx-proxy-caching  
