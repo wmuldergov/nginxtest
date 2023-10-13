@@ -6,7 +6,8 @@ echo 'Test Updating HTML File with DRIVEBC_IMAGE_API_BASE_URL from the django co
 echo "The value of DRIVEBC_IMAGE_API_BASE_URL is " ${DRIVEBC_IMAGE_API_BASE_URL}
 
 BASE_URL=${DRIVEBC_IMAGE_API_BASE_URL}
-
+#This will remove the trailing / if one exists as it will break the config file
+BASE_URL=${DRIVEBC_IMAGE_API_BASE_URL%/}
 
 
 # Perform the text replacement for the index.html file
