@@ -11,7 +11,7 @@ BASE_URL=${DRIVEBC_IMAGE_API_BASE_URL}
 HTML_FILE="/usr/share/nginx/html/index.html"
 
 # Perform the text replacement
-sed -i "s/\$URL/$BASE_URL/g" "$HTML_FILE"
+sed -i "s/$URL/$BASE_URL/g" "$HTML_FILE"
 
 
 exec "$@"
