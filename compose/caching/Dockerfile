@@ -1,6 +1,9 @@
 FROM nginx:stable
 
 COPY ./src/caching/nginx.conf /etc/nginx/nginx.conf
+#TEMP to see if I can update the file successfully
+COPY ./src/caching/nginxtest.conf /etc/nginx/nginxtest.conf
+
 COPY ./src/caching/index.html /usr/share/nginx/html
 COPY ./src/caching/nocachetest.html /usr/share/nginx/html
 

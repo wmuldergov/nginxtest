@@ -7,11 +7,15 @@ echo "The value of DRIVEBC_IMAGE_API_BASE_URL is " ${DRIVEBC_IMAGE_API_BASE_URL}
 
 BASE_URL=${DRIVEBC_IMAGE_API_BASE_URL}
 
-# Define the path to your index.html file
-HTML_FILE="/usr/share/nginx/html/index.html"
 
-# Perform the text replacement
-sed -i "s|\$URL|$BASE_URL|g" "$HTML_FILE"
+
+# Perform the text replacement for the index.html file
+HTML_FILE="/usr/share/nginx/html/index.html"
+sed -i "s|\$DRIVEBC_BASE_URL|$BASE_URL|g" "$HTML_FILE"
+
+# Perform the text replacement for the nginxtest.conf file
+CONF_FILE="/etc/nginx/nginxtest.conf"
+sed -i "s|\$DRIVEBC_BASE_URL|$BASE_URL|g" "$CONF_FILE"
 
 
 exec "$@"
