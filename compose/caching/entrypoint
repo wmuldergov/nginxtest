@@ -2,13 +2,7 @@
 
 echo 'test'
 
-# Read the value of DRIVEBC_IMAGE_API_BASE_URL from the 'django' ConfigMap
-CONFIG_MAP_NAME="django"
-VARIABLE_NAME="DRIVEBC_IMAGE_API_BASE_URL"
-CONFIG_MAP_PATH="/config/${CONFIG_MAP_NAME}"
-VALUE=$(oc get configmap/${CONFIG_MAP_NAME} -o jsonpath="{.data.${VARIABLE_NAME}}")
-
 # Display the value
-echo "The value of ${VARIABLE_NAME} is: ${VALUE}"
+echo "The value of DRIVEBC_IMAGE_API_BASE_URL is ${DRIVEBC_IMAGE_API_BASE_URL}
 
 exec "$@"
