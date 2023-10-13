@@ -1,22 +1,22 @@
 #!/bin/bash
 
-echo 'Test Updating HTML File with DRIVEBC_IMAGE_API_BASE_URL from the django configmap'
+echo "Updating the proxy_pass in the nginx config based on the DRIVEBC_IMAGE_API_BASE_URL variable in the django configmap"
 
 # Display the value
-echo "The value of DRIVEBC_IMAGE_API_BASE_URL is " ${DRIVEBC_IMAGE_API_BASE_URL}
+echo "The value of DRIVEBC_IMAGE_API_BASE_URL in the configmap is" ${DRIVEBC_IMAGE_API_BASE_URL}
 
-BASE_URL=${DRIVEBC_IMAGE_API_BASE_URL}
+DRIVEBC_BASE_URL=${DRIVEBC_IMAGE_API_BASE_URL}
 #This will remove the trailing / if one exists as it will break the config file
-BASE_URL=${DRIVEBC_IMAGE_API_BASE_URL%/}
+DRIVEBC_BASE_URL=${DRIVEBC_IMAGE_API_BASE_URL%/}
 
 
 # Perform the text replacement for the index.html file
 HTML_FILE="/usr/share/nginx/html/index.html"
-sed -i "s|\$DRIVEBC_BASE_URL|$BASE_URL|g" "$HTML_FILE"
+sed -i "s|\$DRIVEBC_BASE_URL|$DRIVEBC_BASE_URL|g" "$HTML_FILE"
 
 # Perform the text replacement for the nginxtest.conf file
-CONF_FILE="/usr/share/nginx/html/nginxtest.conf"
-sed -i "s|\$DRIVEBC_BASE_URL|$BASE_URL|g" "$CONF_FILE"
+CONF_FILE="/tmp/nginxtest.conf"
+sed -i "s|\$DRIVEBC_BASE_URL|$DRIVEBC_BASE_URL|g" "$CONF_FILE"
 
 cat $CONF_FILE
 
