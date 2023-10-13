@@ -6,7 +6,7 @@ echo "Updating the proxy_pass in the nginx config based on the DRIVEBC_IMAGE_API
 echo "The value of DRIVEBC_IMAGE_API_BASE_URL in the configmap is" ${DRIVEBC_IMAGE_API_BASE_URL}
 
 DRIVEBC_BASE_URL=${DRIVEBC_IMAGE_API_BASE_URL}
-#This will remove the trailing / if one exists as it will break the config file
+#This will remove the trailing / if one exists as it will break the nginx.conf file
 DRIVEBC_BASE_URL=${DRIVEBC_IMAGE_API_BASE_URL%/}
 
 
@@ -14,10 +14,14 @@ DRIVEBC_BASE_URL=${DRIVEBC_IMAGE_API_BASE_URL%/}
 HTML_FILE="/usr/share/nginx/html/index.html"
 sed -i "s|\$DRIVEBC_BASE_URL|$DRIVEBC_BASE_URL|g" "$HTML_FILE"
 
+
 # Perform the text replacement for the nginxtest.conf file
 CONF_FILE="/tmp/staging/nginxtest.conf"
 sed -i "s|\$DRIVEBC_BASE_URL|$DRIVEBC_BASE_URL|g" "$CONF_FILE"
 
 cat $CONF_FILE
+
+mv CONF_FILE /etc/nginx
+rm -r /tmp/staging
 
 exec "$@"
