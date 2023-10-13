@@ -7,7 +7,7 @@ echo "The value of DRIVEBC_IMAGE_API_BASE_URL in the configmap is" ${DRIVEBC_IMA
 
 DRIVEBC_BASE_URL=${DRIVEBC_IMAGE_API_BASE_URL}
 #This will remove the trailing / if one exists as it will break the nginx.conf file
-DRIVEBC_BASE_URL=${DRIVEBC_IMAGE_API_BASE_URL%/}
+DRIVEBC_IMAGE_API_BASE_URL=${DRIVEBC_IMAGE_API_BASE_URL%/}
 
 # Perform the text replacement for the index.html file
 HTML_FILE="/usr/share/nginx/html/index.html"
@@ -16,7 +16,7 @@ sed -i "s|\$DRIVEBC_BASE_URL|$DRIVEBC_BASE_URL|g" "$HTML_FILE"
 echo ${DRIVEBC_BASE_URL}
 
 #Replace the $DRIVEBC_IMAGE_API_BASE_URL variables in the conf file.
-envsubst '${DRIVEBC_IMAGE_API_BASE_URL%/}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
+envsubst "\${DRIVEBC_IMAGE_API_BASE_URL}" < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
 
 
 
