@@ -7,14 +7,17 @@ on:
       environment:
         type: environment
 
+  push:
+    branches: [ "main" ]   
+
 jobs:
 
   build:
     runs-on: ubuntu-latest
     name: Build & Deploy Docker images
     environment:
-      name: ${{ inputs.environment }}
-
+#      name: ${{ inputs.environment }}
+      name: uat
     steps:
     - name: checkout code
       uses: actions/checkout@v3
