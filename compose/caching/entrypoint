@@ -3,6 +3,6 @@
 echo 'test'
 
 # Display the value
-echo "The value of DRIVEBC_IMAGE_API_BASE_URL is ${DRIVEBC_IMAGE_API_BASE_URL}"
+echo "The value of DRIVEBC_IMAGE_API_BASE_URL is " ${DRIVEBC_IMAGE_API_BASE_URL}
 
 exec "$@"
