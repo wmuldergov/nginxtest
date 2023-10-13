@@ -15,7 +15,7 @@ sed -i "s|\$DRIVEBC_BASE_URL|$DRIVEBC_BASE_URL|g" "$HTML_FILE"
 
 echo ${DRIVEBC_BASE_URL}
 
-#Replace the $DRIVEBC_IMAGE_API_BASE_URL variables in the conf file. I appended %/ at the end so it would remove any trailing /
+#Replace the $DRIVEBC_IMAGE_API_BASE_URL variables in the conf file.
 envsubst "\${DRIVEBC_IMAGE_API_BASE_URL} \${DRIVEBC_BASE_URL}" < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
 
 
