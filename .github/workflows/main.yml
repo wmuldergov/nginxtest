@@ -1,0 +1,31 @@
+name: Build Image Caching Image
+
+on:
+
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    name: Build Docker images
+
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v3
+      
+    - name: build image caching
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: image_caching
+        tags: latest ${{ github.sha }}
+        labels: |
+          app=drivebc
+        containerfiles: ./Dockerfile
+#    - name: push to registry
+#      uses: redhat-actions/push-to-registry@v2.7
+#      with:
+#        image: image_caching
+#        registry: ${{ secrets.REGISTRY }}
+#        username: ${{ secrets.BUILDER_USERNAME }}
+#        password: ${{ secrets.BUILDER_TOKEN }}
