@@ -8,7 +8,7 @@ RUN chmod -R 777 /var/cache/nginx
 RUN chmod -R 777 /var/log/nginx
 CMD /usr/sbin/nginx -g 'daemon off;'
 
-COPY ./compose/backend/entrypoint /
+COPY ./compose/caching/entrypoint /
 RUN sed -i 's/\r$//g' /entrypoint && chmod +x /entrypoint
 
 ENTRYPOINT ["/entrypoint"]
