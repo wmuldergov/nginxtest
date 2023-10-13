@@ -9,8 +9,12 @@ COPY ./src/caching/nocachetest.html /usr/share/nginx/html
 
 RUN chmod -R 777 /var/cache/nginx
 RUN chmod -R 777 /var/log/nginx
-#temp run command as I test updating a file
+
+#temp run commands as I test updating a file
 RUN chmod -R 777 /usr/share/nginx/html
+RUN chmod -R 777 /etc/nginx
+
+
 CMD /usr/sbin/nginx -g 'daemon off;'
 
 COPY ./compose/caching/entrypoint /
