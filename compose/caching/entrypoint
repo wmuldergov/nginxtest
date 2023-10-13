@@ -15,7 +15,7 @@ sed -i "s|\$DRIVEBC_BASE_URL|$DRIVEBC_BASE_URL|g" "$HTML_FILE"
 
 
 #Replace the 
-envsubst "\$$DRIVEBC_BASE_URL" < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
+envsubst "\$DRIVEBC_BASE_URL" < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
 
 
 
