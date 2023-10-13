@@ -9,19 +9,26 @@ DRIVEBC_BASE_URL=${DRIVEBC_IMAGE_API_BASE_URL}
 #This will remove the trailing / if one exists as it will break the nginx.conf file
 DRIVEBC_BASE_URL=${DRIVEBC_IMAGE_API_BASE_URL%/}
 
-
 # Perform the text replacement for the index.html file
 HTML_FILE="/usr/share/nginx/html/index.html"
 sed -i "s|\$DRIVEBC_BASE_URL|$DRIVEBC_BASE_URL|g" "$HTML_FILE"
 
 
+#Replace the 
+envsubst < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
+
+
+
+
+
+
 # Perform the text replacement for the nginxtest.conf file
-CONF_FILE="/tmp/staging/nginxtest.conf"
-sed -i "s|\$DRIVEBC_BASE_URL|$DRIVEBC_BASE_URL|g" "$CONF_FILE"
+#CONF_FILE="/tmp/staging/nginxtest.conf"
+#sed -i "s|\$DRIVEBC_BASE_URL|$DRIVEBC_BASE_URL|g" "$CONF_FILE"
 
-cat $CONF_FILE
+cat /etc/nginx/nginx.conf
 
-mv $CONF_FILE /etc/nginx
+#sudo mv $CONF_FILE /etc/nginx
 #rm -r /tmp/staging
 
 exec "$@"
