@@ -13,6 +13,7 @@ DRIVEBC_BASE_URL=${DRIVEBC_IMAGE_API_BASE_URL%/}
 HTML_FILE="/usr/share/nginx/html/index.html"
 sed -i "s|\$DRIVEBC_BASE_URL|$DRIVEBC_BASE_URL|g" "$HTML_FILE"
 
+echo $DRIVEBC_BASE_URL
 
 #Replace the 
 envsubst "\$DRIVEBC_BASE_URL" < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
