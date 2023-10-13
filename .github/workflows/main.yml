@@ -1,8 +1,10 @@
 name: Build Image Caching Image
 
 on:
-
   workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
 
 jobs:
 
