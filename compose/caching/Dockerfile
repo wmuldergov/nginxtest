@@ -1,7 +1,7 @@
 FROM nginx:stable
 
 
-COPY ./src/caching/nginx.conf /etc/nginx/nginx.conf
+#COPY ./src/caching/nginx.conf /etc/nginx/nginx.conf
 #Copy the template file to the nginx folder as well for testing
 COPY ./src/caching/nginx.conf.template /etc/nginx/
 
