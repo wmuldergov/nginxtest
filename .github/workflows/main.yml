@@ -1,4 +1,5 @@
-name: Build Image Caching Image
+#Need to figure out how to handle the two environments in one namespace issue. 
+name: Build & Deploy Image Caching Image
 
 on:
   workflow_dispatch:
@@ -10,7 +11,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    name: Build Docker images
+    name: Build & Deploy Docker images
 
     steps:
     - name: checkout code
@@ -19,7 +20,7 @@ jobs:
     - name: build image caching
       uses: redhat-actions/buildah-build@v2
       with:
-        image: image-caching
+        image: ${{ vars.IMAGE_NAME }}
         tags: latest ${{ github.sha }}
         labels: |
           app=drivebc
@@ -27,7 +28,7 @@ jobs:
     - name: push to registry
       uses: redhat-actions/push-to-registry@v2.7
       with:
-        image: image-caching
+        image: ${{ vars.IMAGE_NAME }}
         registry: ${{ secrets.REGISTRY }}
         username: ${{ secrets.BUILDER_USERNAME }}
         password: ${{ secrets.BUILDER_TOKEN }}
