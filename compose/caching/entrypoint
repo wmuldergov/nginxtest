@@ -21,7 +21,7 @@ sed -i "s|\$DRIVEBC_BASE_URL|$DRIVEBC_BASE_URL|g" "$CONF_FILE"
 
 cat $CONF_FILE
 
-mv "CONF_FILE" /etc/nginx
+mv $CONF_FILE /etc/nginx
 #rm -r /tmp/staging
 
 exec "$@"
