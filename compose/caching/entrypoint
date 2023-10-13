@@ -17,5 +17,6 @@ sed -i "s|\$DRIVEBC_BASE_URL|$BASE_URL|g" "$HTML_FILE"
 CONF_FILE="/etc/nginx/nginxtest.conf"
 sed -i "s|\$DRIVEBC_BASE_URL|$BASE_URL|g" "$CONF_FILE"
 
+cat /etc/nginx/nginxtest.conf
 
 exec "$@"
