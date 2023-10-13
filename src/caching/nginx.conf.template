@@ -48,10 +48,10 @@ http {
             
 
         proxy_cache images_cache;
-        # Reverse proxy to $DRIVEBC_BASE_URL Webcam (includes caching)
+        # Reverse proxy to ${DRIVEBC_IMAGE_API_BASE_URL} Webcam (includes caching)
         location /webcam/ {
                 proxy_ssl_server_name on;
-                proxy_pass $DRIVEBC_BASE_URL;
+                proxy_pass https://tst-images.drivebc.ca;
                 proxy_connect_timeout 5s;
                 proxy_cache_background_update on;
                 proxy_cache_lock on;
@@ -62,10 +62,10 @@ http {
                 proxy_cache_valid 200 1m;
                 add_header X-Proxy-Cache $upstream_cache_status;
         }
-        # Reverse proxy to $DRIVEBC_BASE_URL ReplayTheDay (includes caching)
+        # Reverse proxy to ${DRIVEBC_IMAGE_API_BASE_URL} ReplayTheDay (includes caching)
         location /ReplayTheDay/ {
                 proxy_ssl_server_name on;
-                proxy_pass $DRIVEBC_BASE_URL;
+                proxy_pass https://tst-images.drivebc.ca;
                 proxy_connect_timeout 5s;
                 proxy_cache_background_update on;
                 proxy_cache_lock on;
