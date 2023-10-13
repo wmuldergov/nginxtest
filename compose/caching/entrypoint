@@ -1,1 +1,1 @@
-echo 'Running entryPoint'
+>&2 echo 'Test'
