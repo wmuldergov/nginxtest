@@ -14,9 +14,9 @@ HTML_FILE="/usr/share/nginx/html/index.html"
 sed -i "s|\$DRIVEBC_BASE_URL|$BASE_URL|g" "$HTML_FILE"
 
 # Perform the text replacement for the nginxtest.conf file
-CONF_FILE="/etc/nginx/nginxtest.conf"
+CONF_FILE="/usr/share/nginx/html/nginxtest.conf"
 sed -i "s|\$DRIVEBC_BASE_URL|$BASE_URL|g" "$CONF_FILE"
 
-cat /etc/nginx/nginxtest.conf
+cat $CONF_FILE
 
 exec "$@"
