@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Build & Deploy Docker images
     environment:
-      name: ${{ vars.ENVIRONMENT_STAGE }}
+      name: ${{ inputs.environment }}
 
     steps:
     - name: checkout code
