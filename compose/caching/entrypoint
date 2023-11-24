@@ -1,23 +1,5 @@
 #!/bin/bash
 
-echo "Updating the URL and Version from the to pull from the configmap"
-
-# Display the value
-echo "The value of DRIVEBC_IMAGE_API_BASE_URL in the configmap is" ${DRIVEBC_IMAGE_API_BASE_URL}
-
-
-#Replace the $DRIVEBC_IMAGE_API_BASE_URL variables in the index.html file.
-
-target=/usr/share/nginx/html/index.html
-sed -i 's~$DRIVEBC_BASE_URL~${DRIVEBC_IMAGE_API_BASE_URL}~g' "/usr/share/nginx/html/index.html"
-
-cat $target
-
-exec "$@"
-
-
-#!/bin/bash
-
 # Display the value
 echo "The value of DRIVEBC_IMAGE_API_BASE_URL in the configmap is" ${DRIVEBC_IMAGE_API_BASE_URL}
 
