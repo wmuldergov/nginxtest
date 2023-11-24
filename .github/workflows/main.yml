@@ -25,7 +25,7 @@ jobs:
     - name: build image caching
       uses: redhat-actions/buildah-build@v2
       with:
-        image: ${{ vars.IMAGE_NAME }}
+        image: ${{ vars.CACHING_IMAGE_NAME }}
         tags: latest ${{ github.sha }}
         labels: |
           app=drivebc
