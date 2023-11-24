@@ -9,8 +9,26 @@ echo "The value of DRIVEBC_IMAGE_API_BASE_URL in the configmap is" ${DRIVEBC_IMA
 #Replace the $DRIVEBC_IMAGE_API_BASE_URL variables in the index.html file.
 
 target=/usr/share/nginx/html/index.html
-sed -i 's~$DRIVEBC_BASE_URL~${DRIVEBC_IMAGE_API_BASE_URL}~g' "$target"
+sed -i 's~$DRIVEBC_BASE_URL~${DRIVEBC_IMAGE_API_BASE_URL}~g' "/usr/share/nginx/html/index.html"
 
 cat $target
 
 exec "$@"
+
+
+#!/bin/bash
+
+# Display the value
+echo "The value of DRIVEBC_IMAGE_API_BASE_URL in the configmap is" ${DRIVEBC_IMAGE_API_BASE_URL}
+
+# Read the value from the ConfigMap
+DRIVEBC_IMAGE_API_BASE_URL=$(cat /path/to/configmap/DRIVEBC_IMAGE_API_BASE_URL)
+
+# Replace $DRIVEBC_BASE_URL in index.html with the ConfigMap value
+sed -i "s~\$DRIVEBC_BASE_URL~$DRIVEBC_IMAGE_API_BASE_URL~g" /usr/share/nginx/html/index.html
+
+#display the values
+cat /usr/share/nginx/html/index.html
+
+# Start the Nginx server
+exec nginx -g 'daemon off;'
