@@ -9,7 +9,7 @@ echo "The value of DRIVEBC_IMAGE_API_BASE_URL in the configmap is" ${DRIVEBC_IMA
 #Replace the $DRIVEBC_IMAGE_API_BASE_URL variables in the index.html file.
 
 target=/usr/share/nginx/html/index.html
-sed -i 's~$DRIVEBC_BASE_URL~$DRIVEBC_IMAGE_API_BASE_URL~g' "$target"
+sed -i 's~$DRIVEBC_BASE_URL~${DRIVEBC_IMAGE_API_BASE_URL}~g' "$target"
 
 cat $target
 
