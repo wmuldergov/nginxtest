@@ -25,7 +25,7 @@ jobs:
     - name: build image caching
       uses: redhat-actions/buildah-build@v2
       with:
-        image: image-caching-gh
+        image: ${{ vars.CACHING_IMAGE_NAME }}
         tags: latest ${{ github.sha }}
         labels: |
           app=drivebc
@@ -33,7 +33,7 @@ jobs:
     - name: push to registry
       uses: redhat-actions/push-to-registry@v2.7
       with:
-        image: ${{ vars.IMAGE_NAME }}
+        image: ${{ vars.CACHING_IMAGE_NAME }}
         registry: ${{ secrets.REGISTRY }}
         username: ${{ secrets.BUILDER_USERNAME }}
         password: ${{ secrets.BUILDER_TOKEN }}
