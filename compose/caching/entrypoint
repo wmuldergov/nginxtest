@@ -4,7 +4,7 @@ echo "Updating some variables in the index.html file to use values from the conf
 
 # Display the value
 echo "The value of DRIVEBC_IMAGE_API_BASE_URL in the configmap is" ${DRIVEBC_IMAGE_API_BASE_URL}
-echo "The value of VERSION in the configmap is" ${$VERSION}
+echo "The value of VERSION in the configmap is" ${VERSION}
 
 
 #Replace the $DRIVEBC_BASE_URL variables in the conf file.
