@@ -3,7 +3,7 @@ FROM nginx:stable
 
 #COPY ./src/caching/nginx.conf /etc/nginx/nginx.conf
 #Copy the template file to the nginx folder as well for testing
-COPY ./src/caching/nginx.conf.template /etc/nginx/
+COPY ./src/caching/nginx.conf /etc/nginx/
 
 COPY ./src/caching/index.html /usr/share/nginx/html
 COPY ./src/caching/nocachetest.html /usr/share/nginx/html
