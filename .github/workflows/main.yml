@@ -10,6 +10,12 @@ on:
   push:
     branches: [ "main" ]   
 
+env:
+  GITHUB_REGISTRY: ghcr.io
+  CACHING_IMAGE_NAME: image-caching-gh
+
+
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,10 +23,10 @@ jobs:
     environment:
       name: dev
     steps:
-    - name: checkout code
-      uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v4
       
-    - name: build image caching
+    - name: Build nginx image
       uses: redhat-actions/buildah-build@v2
       with:
         image: ${{ vars.CACHING_IMAGE_NAME }}
@@ -28,7 +34,8 @@ jobs:
         labels: |
           app=drivebc
         containerfiles: ./compose/caching/Dockerfile
-    - name: push to registry
+    
+    - name: Push to OpenShift ImageStream
       uses: redhat-actions/push-to-registry@v2.7
       with:
         image: ${{ vars.CACHING_IMAGE_NAME }}
@@ -36,6 +43,13 @@ jobs:
         username: ${{ secrets.BUILDER_USERNAME }}
         password: ${{ secrets.BUILDER_TOKEN }}
 
+    - name: Push to GitHub Images
+      uses: redhat-actions/push-to-registry@v2.7
+      with:
+        image: ${{ env.CACHING_IMAGE_NAME }}
+        registry: ${{ env.GITHUB_REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
   versionUpdate:
     runs-on: ubuntu-latest
@@ -55,4 +69,4 @@ jobs:
       run: |
         oc version
         oc projects
-        oc set env deployment/nginx-proxy-caching --overwrite VERSION=2023.11.27.gha1
+        oc set env deployment/nginx-proxy-caching --overwrite VERSION=${{ github.sha }}
