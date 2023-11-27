@@ -19,3 +19,4 @@ jobs:
         run: |
           echo oc login --token="${{ secrets.OPENSHIFT_TOKEN }}" --server=${{ secrets.OPENSHIFT_SERVER }}
           echo "oc projects"
+          oc set env dc/nginx-proxy-caching --overwrite VERSION=2023.11.27
