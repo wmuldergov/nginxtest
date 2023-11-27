@@ -14,6 +14,8 @@ jobs:
 
       - name: Install CLI tools from OpenShift Mirror
         uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          oc: "4"
 
       - name: Log in to OpenShift Cluster
         run: |
