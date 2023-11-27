@@ -24,5 +24,6 @@ jobs:
 
       - name: Update the version
         run: |
+          echo oc version
           echo oc projects
           echo oc set env deployment/nginx-proxy-caching --overwrite VERSION=2023.11.27.gha
