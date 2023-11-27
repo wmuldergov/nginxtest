@@ -1,5 +1,5 @@
-#Need to figure out how to handle the two environments in one namespace issue. 
-name: Build & Deploy Image Caching Image
+#This workflows builds the image, pushes to github packages
+name: Build & Test Image to Dev
 
 on:
   workflow_dispatch:
@@ -7,8 +7,8 @@ on:
       environment:
         type: environment
 
-  push:
-    branches: [ "main" ]   
+#  push:
+#    branches: [ "main" ]   
 
 env:
     IMAGE_NAME: image-caching-gh
@@ -39,16 +39,17 @@ jobs:
         labels: |
           app=drivebc
         containerfiles: ./compose/caching/Dockerfile
-    
-    - name: Push to OpenShift ImageStream
-      uses: redhat-actions/push-to-registry@v2.7
-      with:
-        image: ${{ vars.CACHING_IMAGE_NAME }}
-        registry: ${{ secrets.REGISTRY }}
-        username: ${{ secrets.BUILDER_USERNAME }}
-        password: ${{ secrets.BUILDER_TOKEN }}
 
-    - name: Push to GitHub Images
+#      This will probably not be needed anymore. Just keeping it for legacy purposes    
+#    - name: Push to OpenShift ImageStream
+#      uses: redhat-actions/push-to-registry@v2.7
+#      with:
+#        image: ${{ vars.CACHING_IMAGE_NAME }}
+#        registry: ${{ secrets.REGISTRY }}
+#        username: ${{ secrets.BUILDER_USERNAME }}
+#        password: ${{ secrets.BUILDER_TOKEN }}
+
+    - name: Push to GitHub Packages
       uses: redhat-actions/push-to-registry@v2.7
       with:
          image: ${{ steps.build_image.outputs.image }}
@@ -72,6 +73,7 @@ jobs:
         namespace: 80c8d5-dev
         insecure_skip_tls_verify: true
 
+      #This step isn't ideal as the two oc commands cause the deployment to update 2x. HELM Chart should fix that.
     - name: Update the version
       run: |
         oc set image deployment/nginx-proxy-caching nginx=ghcr.io/wmuldergov/image-caching-gh:${{ github.sha }}
