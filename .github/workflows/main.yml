@@ -11,12 +11,10 @@ on:
     branches: [ "main" ]   
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     name: Build & Deploy Docker images
     environment:
-#      name: ${{ inputs.environment }}
       name: dev
     steps:
     - name: checkout code
@@ -37,3 +35,24 @@ jobs:
         registry: ${{ secrets.REGISTRY }}
         username: ${{ secrets.BUILDER_USERNAME }}
         password: ${{ secrets.BUILDER_TOKEN }}
+
+
+  versionUpdate:
+    runs-on: ubuntu-latest
+    name: Update the App Version
+    environment:
+      name: dev
+    steps:
+    - name: Authenticate and set context
+      uses: redhat-actions/oc-login@v1
+      with:
+        openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+        openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+        namespace: 80c8d5-dev
+        insecure_skip_tls_verify: true
+
+    - name: Update the version
+      run: |
+        oc version
+        oc projects
+        oc set env deployment/nginx-proxy-caching --overwrite VERSION=2023.11.27.gha1
