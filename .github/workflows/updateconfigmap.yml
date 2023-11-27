@@ -10,6 +10,7 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+        env: dev
 
 
       - name: Authenticate and set context
