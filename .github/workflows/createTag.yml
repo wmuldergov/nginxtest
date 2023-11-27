@@ -7,6 +7,10 @@ on:
         type: string
         description: Tag Version (incl. prefix; e.g. v1.2.3)
         required: true
+      message:
+        type: string
+        description: Tag Message (e.g. Story Number)
+        required: true
 
 jobs:
   tagging:
@@ -23,7 +27,6 @@ jobs:
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
         git config commit.gpgsign false
 
-        git tag -a ${{ github.event.inputs.tag }}
+        git tag -a ${{ github.event.inputs.tag }} -m "${{ github.event.inputs.message }}"
         git push origin ${{ github.event.inputs.tag }}
 
-        ${vtag//v}
