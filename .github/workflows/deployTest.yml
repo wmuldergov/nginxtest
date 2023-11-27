@@ -1,5 +1,5 @@
-#This will add a tag to the package and then deploy that.
-name: Build & Deploy Image Caching Image for Test environment
+#This will build, push to github packages (with the version tag) and then deploy that openshift.
+name: Build & Test Image to Test
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
         type: environment
       tag:
         type: string
-        description: Tag Version (excl. prefix; e.g. 1.2.3)
+        description: Tag Version (ie. 1.2.3)
         required: true
         
 
