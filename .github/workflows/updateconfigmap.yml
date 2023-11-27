@@ -12,13 +12,15 @@ jobs:
         uses: actions/checkout@v3
 
 
-      - name: Install CLI tools from OpenShift Mirror
-        uses: redhat-actions/openshift-tools-installer@v1
+      - name: Authenticate and set context
+        uses: redhat-actions/oc-login@9b79eb6d8ec51bce42cb4e77f0a174fc80cf3cb9
         with:
-          oc: "4"
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          namespace: 80c8d5-dev
+          insecure_skip_tls_verify: true
 
-      - name: Log in to OpenShift Cluster
+      - name: Update the version
         run: |
-          echo oc login --token="${{ secrets.OPENSHIFT_TOKEN }}" --server="${{ secrets.OPENSHIFT_SERVER }}"
           echo oc projects
           echo oc set env deployment/nginx-proxy-caching --overwrite VERSION=2023.11.27.gha
