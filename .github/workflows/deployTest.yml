@@ -14,7 +14,6 @@ on:
 
 env:
     IMAGE_NAME: image-caching-gh
-    IMAGE_TAGS: v1 ${{ github.sha }}
     IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
     REGISTRY_USER: ${{ github.actor }}
     REGISTRY_PASSWORD: ${{ github.token }}
@@ -38,7 +37,7 @@ jobs:
       uses: redhat-actions/buildah-build@v2
       with:
         image: ${{ vars.CACHING_IMAGE_NAME }}
-        tags: latest ${{ github.sha }} ${{ github.event.inputs.tag }}
+        tags: latest test ${{ github.sha }} ${{ github.event.inputs.tag }}
         labels: |
           app=drivebc
         containerfiles: ./compose/caching/Dockerfile
@@ -69,5 +68,5 @@ jobs:
 
     - name: Update the version
       run: |
-        oc set image deployment/nginx-proxy-caching nginx=ghcr.io/wmuldergov/image-caching-gh:${{ github.sha }}
+        oc set image deployment/nginx-proxy-caching nginx=ghcr.io/wmuldergov/image-caching-gh:${{ github.event.inputs.tag }}
         oc set env deployment/nginx-proxy-caching --overwrite VERSION=${{ github.event.inputs.tag }}
