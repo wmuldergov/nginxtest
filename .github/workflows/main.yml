@@ -12,7 +12,7 @@ on:
 
 env:
   GITHUB_REGISTRY: ghcr.io
-  CACHING_IMAGE_NAME: image-caching-gh
+  CACHING_IMAGE_NAME: wmuldergov/image-caching-gh
 
 
 
@@ -52,6 +52,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
   versionUpdate:
+    needs: [build]
     runs-on: ubuntu-latest
     name: Update the App Version
     environment:
