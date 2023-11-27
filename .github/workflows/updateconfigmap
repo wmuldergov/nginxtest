@@ -1,0 +1,22 @@
+name: Update OpenShift ConfigMap
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-configmap:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+
+      - name: Install oc
+        uses: redhat-actions/oc-installer@v1
+
+      - name: Log in to OpenShift Cluster
+        run: |
+          echo "${{ secrets.OPENSHIFT_TOKEN }}" | oc login "${{ secrets.OPENSHIFT_SERVER }}" --token-
+          echo "oc projects"
+  
