@@ -35,7 +35,7 @@ jobs:
       uses: redhat-actions/buildah-build@v2
       with:
         image: ${{ vars.CACHING_IMAGE_NAME }}
-        tags: latest ${{ github.sha }}
+        tags: latest ${{ github.sha }} 
         labels: |
           app=drivebc
         containerfiles: ./compose/caching/Dockerfile
@@ -74,6 +74,5 @@ jobs:
 
     - name: Update the version
       run: |
-        oc version
-        oc projects
+        oc set image deployment/nginx-proxy-caching nginx=ghcr.io/wmuldergov/image-caching-gh:${{ github.sha }}
         oc set env deployment/nginx-proxy-caching --overwrite VERSION=${{ github.sha }}
