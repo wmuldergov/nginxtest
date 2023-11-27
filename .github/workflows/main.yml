@@ -21,6 +21,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Build & Deploy Docker images
+    permissions:
+      contents: read
+      packages: write
     environment:
       name: dev
     steps:
