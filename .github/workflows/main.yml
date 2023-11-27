@@ -28,6 +28,7 @@ jobs:
       uses: actions/checkout@v4
       
     - name: Build nginx image
+      id: build_image
       uses: redhat-actions/buildah-build@v2
       with:
         image: ${{ vars.CACHING_IMAGE_NAME }}
