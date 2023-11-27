@@ -17,6 +17,6 @@ jobs:
 
       - name: Log in to OpenShift Cluster
         run: |
-          echo "${{ secrets.OPENSHIFT_TOKEN }}" | oc login "${{ secrets.OPENSHIFT_SERVER }}" --token-
+          echo "${{ secrets.OPENSHIFT_TOKEN }}" | oc login "${{ secrets.OPENSHIFT_SERVER }}" "${{ secrets.OPENSHIFT_TOKEN }}"
           echo "oc projects"
   
