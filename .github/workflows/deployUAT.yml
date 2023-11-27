@@ -1,0 +1,35 @@
+#This will deploy the selected git tag to openshift.
+name: Build & Test Image to UAT
+
+on: workflow_dispatch
+
+env:
+    IMAGE_NAME: image-caching-gh
+    IMAGE_TAGS: v1 ${{ github.sha }}
+    IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
+    REGISTRY_USER: ${{ github.actor }}
+    REGISTRY_PASSWORD: ${{ github.token }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    environment:
+      name: dev
+    steps:
+    - name: Fail on branches
+      run: exit 1
+      if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+
+    - name: Authenticate and set context
+      uses: redhat-actions/oc-login@v1
+      with:
+        openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+        openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+        namespace: 80c8d5-dev
+        insecure_skip_tls_verify: true
+
+    - name: Update the version
+      run: |
+        oc set image deployment/nginx-proxy-caching nginx=ghcr.io/wmuldergov/image-caching-gh:${{ github.ref_name }}
+        oc set env deployment/nginx-proxy-caching --overwrite VERSION=${{ github.ref_name }}
