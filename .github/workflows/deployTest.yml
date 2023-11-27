@@ -1,0 +1,73 @@
+#This will add a tag to the package and then deploy that.
+name: Build & Deploy Image Caching Image for Test environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+      tag:
+        type: string
+        description: Tag Version (excl. prefix; e.g. 1.2.3)
+        required: true
+        
+
+env:
+    IMAGE_NAME: image-caching-gh
+    IMAGE_TAGS: v1 ${{ github.sha }}
+    IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
+    REGISTRY_USER: ${{ github.actor }}
+    REGISTRY_PASSWORD: ${{ github.token }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build & Deploy Docker images
+    permissions:
+      contents: read
+      packages: write
+    environment:
+      name: dev
+    steps:
+    
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Build nginx image
+      id: build_image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: ${{ vars.CACHING_IMAGE_NAME }}
+        tags: latest ${{ github.sha }} ${{ github.event.inputs.tag }}
+        labels: |
+          app=drivebc
+        containerfiles: ./compose/caching/Dockerfile
+    
+    - name: Push to GitHub Images
+      uses: redhat-actions/push-to-registry@v2.7
+      with:
+         image: ${{ steps.build_image.outputs.image }}
+         tags: ${{ steps.build_image.outputs.tags }}
+         registry: ${{ env.IMAGE_REGISTRY }}
+         username: ${{ env.REGISTRY_USER }}
+         password: ${{ env.REGISTRY_PASSWORD }}
+
+  versionUpdate:
+    needs: [build]
+    runs-on: ubuntu-latest
+    name: Update the App Version
+    environment:
+      name: dev
+    steps:
+    - name: Authenticate and set context
+      uses: redhat-actions/oc-login@v1
+      with:
+        openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+        openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+        namespace: 80c8d5-dev
+        insecure_skip_tls_verify: true
+
+    - name: Update the version
+      run: |
+        oc set image deployment/nginx-proxy-caching nginx=ghcr.io/wmuldergov/image-caching-gh:${{ github.sha }}
+        oc set env deployment/nginx-proxy-caching --overwrite VERSION=${{ github.event.inputs.tag }}
