@@ -68,5 +68,4 @@ jobs:
 
     - name: Update the version
       run: |
-        oc set image deployment/nginx-proxy-caching nginx=ghcr.io/wmuldergov/image-caching-gh:${{ github.event.inputs.tag }}
-        oc set env deployment/nginx-proxy-caching --overwrite VERSION=${{ github.event.inputs.tag }}
+        helm upgrade image-caching -f helm/values.yaml --set image.tag="${{ github.event.inputs.tag }}" helm

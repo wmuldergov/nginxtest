@@ -31,5 +31,4 @@ jobs:
 
     - name: Update the version
       run: |
-        oc set image deployment/nginx-proxy-caching nginx=ghcr.io/wmuldergov/image-caching-gh:${{ github.ref_name }}
-        oc set env deployment/nginx-proxy-caching --overwrite VERSION=${{ github.ref_name }}
+        helm upgrade image-caching -f helm/values.yaml --set image.tag="${{ github.ref_name }}" helm
