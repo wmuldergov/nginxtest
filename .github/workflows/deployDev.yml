@@ -72,8 +72,8 @@ jobs:
         namespace: 80c8d5-dev
         insecure_skip_tls_verify: true
 
-      #This step isn't ideal as the two oc commands cause the deployment to update 2x. HELM Chart should fix that.
     - name: Update the version
       run: |
-        oc set image deployment/nginx-proxy-caching nginx=ghcr.io/wmuldergov/image-caching-gh:${{ github.sha }}
-        oc set env deployment/nginx-proxy-caching --overwrite VERSION=${{ github.sha }}
+        helm upgrade image-caching -f .\values.yaml --set image.tag="${{ github.sha }}" .\
+        #oc set image deployment/image-caching nginx=ghcr.io/wmuldergov/image-caching-gh:${{ github.sha }}
+        #oc set env deployment/image-caching --overwrite VERSION=${{ github.sha }}
