@@ -79,6 +79,6 @@ jobs:
       run: |
         pwd
         ls
-        helm upgrade image-caching -f .\helm\values.yaml --set image.tag="${{ github.sha }}" .\helm
+        helm upgrade image-caching -f \helm\values.yaml --set image.tag="${{ github.sha }}" \helm
         #oc set image deployment/image-caching nginx=ghcr.io/wmuldergov/image-caching-gh:${{ github.sha }}
         #oc set env deployment/image-caching --overwrite VERSION=${{ github.sha }}
