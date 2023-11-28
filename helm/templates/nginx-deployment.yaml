@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "app.fullname" . }}
+  labels: {{ include "app.labels" . | nindent 4 }}
+  annotations:
+
+spec:
+  replicas: {{ .Values.deployment.replicas  }}
+  selector:
+    matchLabels:
+      {{ include "app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "app.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - resources:
+            limits:
+              cpu: {{ .Values.deployment.resources.limits.cpu  }}
+              memory: {{ .Values.deployment.resources.limits.memory  }}
+            requests:
+              cpu: {{ .Values.deployment.resources.requests.cpu  }}
+              memory: {{ .Values.deployment.resources.requests.memory  }}
+          name: {{ include "app.fullname" . }}
+          env:
+            - name: DRIVEBC_IMAGE_API_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: django
+                  key: DRIVEBC_IMAGE_API_BASE_URL
+            - name: VERSION
+              value: {{ .Values.image.tag  }}
+            - name: CACHING_URL
+              value: {{ .Values.route.host  }}
+          imagePullPolicy: IfNotPresent
+          image: >-
+            {{ .Values.image.repository  }}:{{ .Values.image.tag  }}
+        - resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
+          terminationMessagePath: /dev/termination-log
+          name: nginx-exporter
+          ports:
+            - containerPort: 9113
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          terminationMessagePolicy: File
+          image: 'nginx/nginx-prometheus-exporter:0.11.0'
+          args:
+            - '-nginx.scrape-uri=http://localhost:8080/stub_status'
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            podAffinityTerm:
+              topologyKey: "app.kubernetes.io/instance"
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: {{ template "app.name" . }}

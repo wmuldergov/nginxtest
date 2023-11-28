@@ -1,0 +1,21 @@
+
+
+fullnameOverride: image-caching
+namespace: 80c8d5-dev #enter the full namespace here to the deployment has the correct imagestream
+environment: dev #enter the environment this is being deployed too. Needed to set the configmap reference
+
+image:
+  repository: ghcr.io/wmuldergov/image-caching-gh
+  tag: dev
+
+deployment:
+  replicas: 2
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 150m
+      memory: 128Mi
+route:
+  host: image-caching.apps.silver.devops.gov.bc.ca
