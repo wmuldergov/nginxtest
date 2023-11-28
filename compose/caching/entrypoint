@@ -4,12 +4,14 @@ echo "Updating some variables in the index.html file to use values from the conf
 
 # Display the value
 echo "The value of DRIVEBC_IMAGE_API_BASE_URL in the configmap is" ${DRIVEBC_IMAGE_API_BASE_URL}
-echo "The value of VERSION in the configmap is" ${VERSION}
+echo "The value of VERSION in the env variable is" ${VERSION}
+echo "The value of CACHING_URL in the env variable is" ${CACHING_URL}
 
 
 #Replace the $DRIVEBC_BASE_URL variables in the conf file.
 sed -i "s~\$DRIVEBC_BASE_URL~$DRIVEBC_IMAGE_API_BASE_URL~g" /usr/share/nginx/html/index.html
 sed -i "s~\$SITE_VERSION~$VERSION~g" /usr/share/nginx/html/index.html
+sed -i "s~\$CACHING_URL~$CACHING_URL~g" /usr/share/nginx/html/index.html
 
 cat /usr/share/nginx/html/index.html
 
