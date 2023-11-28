@@ -25,6 +25,7 @@ jobs:
       packages: write
     environment:
       name: dev
+      url: https://image-caching.apps.silver.devops.gov.bc.ca/
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
