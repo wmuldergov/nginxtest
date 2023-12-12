@@ -1,7 +1,9 @@
-name: Trivy Scan's
+name: Trivy Scans
 
 on:
     workflow_dispatch:
+
+permissions: write-all
 
 jobs:
   helmscan:
