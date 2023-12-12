@@ -23,7 +23,6 @@ jobs:
           output: 'trivy-results.sarif'
           exit-code: '0'
           ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
@@ -37,7 +36,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'ghcr.io/wmuldergov/image-caching-gh:357e06956f63270e96b5e2424a7a6dfaf886fd73'
+          image-ref: 'ghcr.io/wmuldergov/image-caching-gh:latest'
           format: 'sarif'
           output: 'trivy-results.sarif'
 

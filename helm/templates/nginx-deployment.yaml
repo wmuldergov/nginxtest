@@ -37,6 +37,9 @@ spec:
           imagePullPolicy: IfNotPresent
           image: >-
             {{ .Values.image.repository  }}:{{ .Values.image.tag  }}
+          securityContext:
+            seccompProfile:
+              type: 'RuntimeDefault'
         - resources:
             limits:
               cpu: 100m
