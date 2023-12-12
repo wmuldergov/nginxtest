@@ -29,3 +29,19 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 'trivy-results.sarif'
+
+  imagescan:
+    name: Scan Image 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'ghcr.io/wmuldergov/image-caching-gh:357e06956f63270e96b5e2424a7a6dfaf886fd73'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
