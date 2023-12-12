@@ -1,0 +1,221 @@
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-prometheus
+spec:
+  ports:
+    - name: prometheus
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+  internalTrafficPolicy: Cluster
+  ipFamilyPolicy: SingleStack
+  sessionAffinity: None
+  selector:
+    name: nginx-prometheus
+
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nginx-prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: nginx-prometheus
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: nginx-prometheus
+    spec:
+      restartPolicy: Always
+      serviceAccountName: prometheus-sa
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+      securityContext: {}
+      containers:
+        - resources: {}
+          readinessProbe:
+            httpGet:
+              path: /-/ready
+              port: 9090
+              scheme: HTTP
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          name: prometheus
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: 9090
+              scheme: HTTP
+            initialDelaySeconds: 15
+            timeoutSeconds: 1
+            periodSeconds: 20
+            successThreshold: 1
+            failureThreshold: 3
+          ports:
+            - containerPort: 9090
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: prometheusconf
+              mountPath: /etc/prometheus
+            - name: prometheusdata
+              mountPath: /prometheus
+            - name: alertmanagerrules
+              mountPath: /etc/prometheus/alert-rules.d
+          terminationMessagePolicy: File
+          image: 'prom/prometheus:latest'
+      serviceAccount: prometheus-sa
+      volumes:
+        - name: prometheusconf
+          configMap:
+            name: nginx-prometheus
+            defaultMode: 420
+        - name: prometheusdata
+          persistentVolumeClaim:
+            claimName: prometheusdata
+        - name: alertmanagerrules
+          configMap:
+            name: alertmanager-rules-config
+            defaultMode: 420
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: prometheusdata
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: netapp-block-standard
+  volumeMode: Filesystem
+
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nginx-prometheus
+data:
+  prometheus.yml: |+
+
+    global:
+      scrape_interval: 1s
+      scrape_timeout: 1s
+
+    scrape_configs:
+      - job_name: 'nginx-prometheus-exporter'
+        metrics_path: '/metrics'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - default
+            selectors:
+              - role: "pod"
+                label: "app.kubernetes.io/name=image-caching"
+
+
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: alertmanager-config
+data:
+  alertmanager.yml: >
+
+
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: alertmanager-rules-config
+data:
+  crunchy-alert-rules-pg.yml: >
+
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: nginx-prometheus
+  to:
+    kind: Service
+    name: nginx-prometheus
+    weight: 100
+  port:
+    targetPort: 9090
+  wildcardPolicy: None
+
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus-sa
+  namespace: 80c8d5-dev
+
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/name: postgres-operator-monitoring
+  name: prometheus-cr
+  namespace: 80c8d5-dev
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: prometheus-crb
+  namespace: 80c8d5-dev
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-cr
+subjects:
+- kind: ServiceAccount
+  name: prometheus-sa
+  namespace: 80c8d5-dev
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
