@@ -1,4 +1,4 @@
-FROM nginx:stable-alpine
+FROM nginx:stable
 
 
 #COPY ./src/caching/nginx.conf /etc/nginx/nginx.conf
