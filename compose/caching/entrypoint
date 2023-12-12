@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 echo "Updating some variables in the index.html file to use values from the config map."
 
