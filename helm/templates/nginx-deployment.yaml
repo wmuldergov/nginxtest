@@ -40,6 +40,8 @@ spec:
           securityContext:
             seccompProfile:
               type: 'RuntimeDefault'
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
         - resources:
             limits:
               cpu: 100m
@@ -55,6 +57,11 @@ spec:
           imagePullPolicy: IfNotPresent
           terminationMessagePolicy: File
           image: 'nginx/nginx-prometheus-exporter:0.11.0'
+          securityContext:
+            seccompProfile:
+              type: 'RuntimeDefault'
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
           args:
             - '-nginx.scrape-uri=http://localhost:8080/stub_status'
       affinity:
