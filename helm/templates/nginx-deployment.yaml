@@ -38,12 +38,12 @@ spec:
           image: >-
             {{ .Values.image.repository  }}:{{ .Values.image.tag  }}
           securityContext:
+            runAsUser: 10001
+            runAsGroup: 30001
             seccompProfile:
               type: 'RuntimeDefault'
             runAsNonRoot: true
             allowPrivilegeEscalation: false
-           runAsUser: 10001
-           runAsGroup: 30001
             capabilities:
               drop:
                 - all
@@ -65,12 +65,12 @@ spec:
           terminationMessagePolicy: File
           image: 'nginx/nginx-prometheus-exporter:0.11.0'
           securityContext:
+            runAsUser: 10001
+            runAsGroup: 30001
             seccompProfile:
               type: 'RuntimeDefault'
             runAsNonRoot: true
             allowPrivilegeEscalation: false
-           runAsUser: 10002
-           runAsGroup: 30002
             capabilities:
               drop:
                 - all
