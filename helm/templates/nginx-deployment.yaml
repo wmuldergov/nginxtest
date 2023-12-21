@@ -42,6 +42,8 @@ spec:
               type: 'RuntimeDefault'
             runAsNonRoot: true
             allowPrivilegeEscalation: false
+           runAsUser: 10001
+           runAsGroup: 30001
             capabilities:
               drop:
                 - all
@@ -67,6 +69,8 @@ spec:
               type: 'RuntimeDefault'
             runAsNonRoot: true
             allowPrivilegeEscalation: false
+           runAsUser: 10002
+           runAsGroup: 30002
             capabilities:
               drop:
                 - all
