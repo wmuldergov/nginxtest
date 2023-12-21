@@ -38,7 +38,7 @@ spec:
           image: >-
             {{ .Values.image.repository  }}:{{ .Values.image.tag  }}
           securityContext:
-            runAsUser: 10001
+#            runAsUser: 10001 OPENSHIFT DOESN'T LIKE THIS ID
             runAsGroup: 30001
             seccompProfile:
               type: 'RuntimeDefault'
@@ -65,7 +65,7 @@ spec:
           terminationMessagePolicy: File
           image: 'nginx/nginx-prometheus-exporter:0.11.0'
           securityContext:
-            runAsUser: 10001
+#            runAsUser: 10001 OPENSHIFT DOESN'T LIKE THIS ID
             runAsGroup: 30001
             seccompProfile:
               type: 'RuntimeDefault'
