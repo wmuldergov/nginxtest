@@ -1,7 +1,10 @@
-#This will deploy the selected git tag to openshift.
-name: Build & Test Image to UAT
+name: Promote from UAT to Prod
 
-on: workflow_dispatch
+on: 
+  workflow_dispatch: #Make sure you select a tag and not a branch if using manually
+  release:
+    types: [published]
+
 
 env:
     IMAGE_NAME: image-caching-gh
@@ -39,14 +42,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Add latest-uat tag to images
+    - name: Add latest-prod tag to images
       uses: shrink/actions-docker-registry-tag@v3
       with:
         registry: ghcr.io
         repository: wmuldergov/image-caching-gh
         target: ${{ needs.build-pre.outputs.tag }}
         tags: |
-          latest-uat
+          latest-prod
 
 #    - name: Authenticate and set context
 #      uses: redhat-actions/oc-login@v1
