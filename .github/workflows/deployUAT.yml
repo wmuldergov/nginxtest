@@ -23,14 +23,24 @@ jobs:
 
     - name: Checkout code
       uses: actions/checkout@v4
-    - name: Authenticate and set context
-      uses: redhat-actions/oc-login@v1
-      with:
-        openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
-        openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
-        namespace: 80c8d5-dev
-        insecure_skip_tls_verify: true
 
-    - name: Update the version
-      run: |
-        helm upgrade image-caching -f helm/values.yaml --set image.tag="${{ github.ref_name }}" helm
+    - name: Add latest-uat tag to images
+      uses: shrink/actions-docker-registry-tag@v3
+      with:
+        registry: ghcr.io
+        repository: wmuldergov/image-caching-gh
+        target: ${{ github.ref_name }}
+        tags: |
+          latest-uat
+
+#    - name: Authenticate and set context
+#      uses: redhat-actions/oc-login@v1
+#      with:
+#        openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+#        openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+#        namespace: 80c8d5-dev
+#        insecure_skip_tls_verify: true
+
+#    - name: Update the version
+#      run: |
+#        helm upgrade image-caching -f helm/values.yaml --set image.tag="${{ github.ref_name }}" helm
