@@ -1,6 +1,6 @@
 #to test copying redis image to own registry
-#This workflows builds the image, pushes to github packages
-name: Build & Test Image to Dev
+
+name: Redis TEST
 
 on:
   workflow_dispatch:
