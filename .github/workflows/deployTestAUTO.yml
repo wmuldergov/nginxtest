@@ -2,7 +2,6 @@
 name: Build & Test Image to Test AUTOMATICALLY WITH NEW TAG
 
 on:
-  workflow_dispatch: #Ensure you run it with a tag set if running manually. Branch Check will validate
   push:
     tags:
     - v*.*.*
