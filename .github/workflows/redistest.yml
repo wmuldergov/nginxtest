@@ -1,0 +1,34 @@
+#to test copying redis image to own registry
+#This workflows builds the image, pushes to github packages
+name: Build & Test Image to Dev
+
+on:
+  workflow_dispatch:
+
+env:
+    IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
+    REGISTRY_USER: ${{ github.actor }}
+    REGISTRY_PASSWORD: ${{ github.token }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build & Deploy Docker images
+    permissions:
+      contents: read
+      packages: write
+    environment:
+      name: dev
+      url: https://image-caching.apps.silver.devops.gov.bc.ca/
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Push to GitHub Packages
+      uses: redhat-actions/push-to-registry@v2.7
+      with:
+         image: redis:7
+         tags: latest
+         registry: ${{ env.IMAGE_REGISTRY }}
+         username: ${{ env.REGISTRY_USER }}
+         password: ${{ env.REGISTRY_PASSWORD }}
