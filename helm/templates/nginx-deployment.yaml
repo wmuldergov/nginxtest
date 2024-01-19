@@ -58,6 +58,19 @@ spec:
                 - all
               add:
                 - NET_BIND_SERVICE
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+              httpHeaders:
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 3
+          periodSeconds: 3
         - resources:
             limits:
               cpu: 100m
