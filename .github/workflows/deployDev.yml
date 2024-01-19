@@ -15,6 +15,7 @@ env:
     IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
     REGISTRY_USER: ${{ github.actor }}
     REGISTRY_PASSWORD: ${{ github.token }}
+    TAGS: 
 
 jobs:
   build:
@@ -78,4 +79,5 @@ jobs:
 
     - name: Update the version
       run: |
+        helm dependency update .\helm
         helm upgrade image-caching -f helm/values.yaml --set image.tag="${{ github.sha }}" helm

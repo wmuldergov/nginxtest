@@ -9,8 +9,10 @@ env:
     REGISTRY_USER: ${{ github.actor }}
     REGISTRY_PASSWORD: ${{ github.token }}
 
-jobs:
+permissions:
+  packages: write
 
+jobs:
   build-pre:
     runs-on: ubuntu-latest
     timeout-minutes: 1
@@ -58,4 +60,5 @@ jobs:
 
 #    - name: Update the version
 #      run: |
+#        helm dependency update .\helm
 #        helm upgrade image-caching -f helm/values.yaml --set image.tag="${{ needs.build-pre.outputs.tag }}" helm
