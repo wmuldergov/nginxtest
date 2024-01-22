@@ -99,7 +99,7 @@ spec:
               add:
                 - NET_BIND_SERVICE
           args:
-            - '-nginx.scrape-uri=http://localhost:8080/stub_status'
+            - '-nginx.scrape-uri=http://127.0.0.1:8080/stub_status'
         - name: nginx-fluent-bit-sidecar
           image: 'fluent/fluent-bit:2.2.2'
           ports:
