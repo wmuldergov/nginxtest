@@ -127,7 +127,7 @@ spec:
             - goaccess
             - /mnt/log/access.log
             - '-o'
-            - /mnt/log/index.html
+            - /mnt/log/goaccess/index.html
             - '--log-format=COMBINED'
             - '--real-time-html'
           resources:
