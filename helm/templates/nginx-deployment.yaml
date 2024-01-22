@@ -124,6 +124,7 @@ spec:
         - name: goaccess
           image: allinurl/goaccess
           command:
+            - mkdir /mnt/log/goaccess
             - goaccess
             - /mnt/log/access.log
             - '-o'
