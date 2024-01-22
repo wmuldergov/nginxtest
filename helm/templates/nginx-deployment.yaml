@@ -17,7 +17,8 @@ spec:
     spec:
       volumes:
         - name: log-storage
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: log-storage
         - name: config-volume
           configMap:
             name: nginx-fluentbit
