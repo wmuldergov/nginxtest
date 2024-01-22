@@ -124,11 +124,10 @@ spec:
         - name: goaccess
           image: allinurl/goaccess
           command:
-            - mkdir /mnt/log/goaccess
             - goaccess
             - /mnt/log/access.log
             - '-o'
-            - /mnt/log/goaccess/index.html
+            - /mnt/log/index.html
             - '--log-format=COMBINED'
             - '--real-time-html'
           resources:
@@ -144,6 +143,25 @@ spec:
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: Always
+        - name: goaccess-web
+          command:
+          - python
+          - -m
+          - http.server
+          image: python
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8000
+            name: goaccess
+            protocol: TCP
+          resources:
+            requests:
+              cpu: 200m
+              memory: 32Mi
+          volumeMounts:
+            - name: log-storage
+              mountPath: /mnt/log
+          workingDir: /var/log
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
