@@ -103,10 +103,10 @@ spec:
             - '-nginx.scrape-uri=http://127.0.0.1:8080/stub_status'
         - name: nginx-fluent-bit-sidecar
           image: 'fluent/fluent-bit:2.2.2'
-          ports:
-            - name: syslog
-              containerPort: 5140
-              protocol: TCP
+#          ports:
+#            - name: syslog
+#              containerPort: 5140
+#              protocol: TCP
           resources:
             limits:
               cpu: 100m
