@@ -104,12 +104,12 @@ spec:
         - name: nginx-fluent-bit-sidecar
           image: 'fluent/fluent-bit:2.2.2'
           ports:
-            - name: metrics
-              containerPort: 2020
+            - name: syslog
+              containerPort: 5140
               protocol: TCP
           resources:
             limits:
-              cpu: 10m
+              cpu: 100m
               memory: 50Mi
             requests:
               cpu: 5m
@@ -124,6 +124,8 @@ spec:
           imagePullPolicy: Always
         - name: goaccess
           image: allinurl/goaccess
+          #NOTE: WE MUST CREATE THE GOACCESS FOLDER USING THE MAIN CONTAINER THE FIRST TIME IT'S CREATED. 
+          #TEMPORARILY WE ALSO NEED TO KILL THIS CONTAINER TO REFRESH. USE KILL 1 in the goaccess terminal to do that
           command:
             - goaccess
             - /mnt/log/access.log
