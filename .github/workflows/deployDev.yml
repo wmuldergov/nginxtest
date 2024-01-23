@@ -2,13 +2,11 @@
 name: Build & Test Image to Dev
 
 on:
+  push:
+    branches: [ "main" ]
   workflow_dispatch:
-    inputs:
-      environment:
-        type: environment
 
-#  push:
-#    branches: [ "main" ]   
+
 
 env:
     IMAGE_NAME: image-caching-gh
