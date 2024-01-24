@@ -39,3 +39,5 @@ https://grafana.com/grafana/dashboards/13740-loki-v2-web-analytics-dashboard-for
 1. Test with s3 storage
 1. Test scalable setup
 1. Fix the bug with loki security context
+1. See how well the system works under load
+1. Try running multiple pods at once
