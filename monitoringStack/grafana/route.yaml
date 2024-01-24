@@ -1,0 +1,19 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: grafana
+  namespace: 80c8d5-dev
+  annotations:
+    haproxy.router.openshift.io/ip_whitelist: 142.34.53.0/24 142.22.0.0/15 142.24.0.0/13 142.32.0.0/13
+spec:
+  host: 
+  to:
+    kind: Service
+    name: grafana
+    weight: 100
+  port:
+    targetPort: service
+  tls:
+    termination: edge
+  wildcardPolicy: None
+

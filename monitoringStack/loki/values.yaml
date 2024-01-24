@@ -1,0 +1,61 @@
+global:
+  dnsService: "dns-default"
+  # -- configures DNS service namespace
+  dnsNamespace: "openshift-dns"
+
+loki:
+  # Should authentication be enabled
+  auth_enabled: false
+  commonConfig:
+    replication_factor: 1
+  storage:
+    type: 'filesystem'
+  podSecurityContext:
+    runAsNonRoot: true
+  query_scheduler:
+    max_outstanding_requests_per_tenant: 2048
+
+gateway:
+  podSecurityContext:
+    runAsNonRoot: true
+
+
+singleBinary:
+  replicas: 1
+
+monitoring:
+  selfMonitoring:
+    enabled: false
+    # -- Tenant to use for self monitoring
+    tenant:
+      # -- Name of the tenant
+      name: "self-monitoring"
+      # -- Namespace to create additional tenant token secret in. Useful if your Grafana instance
+      # is in a separate namespace. Token will still be created in the canary namespace.
+      secretNamespace: "{{ .Release.Namespace }}"
+    # Grafana Agent configuration
+    grafanaAgent:
+      # -- Controls whether to install the Grafana Agent Operator and its CRDs.
+      # Note that helm will not install CRDs if this flag is enabled during an upgrade.
+      # In that case install the CRDs manually from https://github.com/grafana/agent/tree/main/production/operator/crds
+      installOperator: false
+
+  serviceMonitor:
+    enabled: false
+
+rbac:
+  # -- If pspEnabled true, a PodSecurityPolicy is created for K8s that use psp.
+  pspEnabled: false
+  # -- For OpenShift set pspEnabled to 'false' and sccEnabled to 'true' to use the SecurityContextConstraints.
+  sccEnabled: false
+  # -- Specify PSP annotations
+  # Ref: https://kubernetes.io/docs/reference/access-authn-authz/psp-to-pod-security-standards/#podsecuritypolicy-annotations
+  pspAnnotations: {}
+  # seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
+  # seccomp.security.alpha.kubernetes.io/defaultProfileName: 'docker/default'
+  # apparmor.security.beta.kubernetes.io/defaultProfileName: 'runtime/default'
+  # -- Whether to install RBAC in the namespace only or cluster-wide. Useful if you want to watch ConfigMap globally.
+  namespaced: true
+
+test:
+  enabled: false
