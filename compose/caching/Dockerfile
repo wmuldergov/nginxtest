@@ -4,10 +4,11 @@ FROM nginx:stable-alpine
 #COPY ./src/caching/nginx.conf /etc/nginx/nginx.conf
 #Copy the template file to the nginx folder as well for testing
 COPY ./src/caching/nginx.conf /etc/nginx/
+RUN mkdir -p /etc/apache2
 
 COPY ./src/caching/index.html /usr/share/nginx/html
 COPY ./src/caching/nocachetest.html /usr/share/nginx/html
-COPY ./src/caching/htpasswd /usr
+COPY ./src/caching/htpasswd /etc/apache2
 
 RUN chmod -R 777 /var/cache/nginx
 RUN chmod -R 777 /var/log/nginx
