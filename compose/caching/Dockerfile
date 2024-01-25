@@ -7,6 +7,7 @@ COPY ./src/caching/nginx.conf /etc/nginx/
 
 COPY ./src/caching/index.html /usr/share/nginx/html
 COPY ./src/caching/nocachetest.html /usr/share/nginx/html
+COPY ./src/caching/htpasswd /usr
 
 RUN chmod -R 777 /var/cache/nginx
 RUN chmod -R 777 /var/log/nginx
