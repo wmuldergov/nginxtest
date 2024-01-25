@@ -8,7 +8,7 @@ RUN mkdir -p /etc/apache2
 
 COPY ./src/caching/index.html /usr/share/nginx/html
 COPY ./src/caching/nocachetest.html /usr/share/nginx/html
-COPY ./src/caching/htpasswd /etc/apache2
+COPY ./src/caching/.htpasswd /etc/apache2
 
 RUN chmod -R 777 /var/cache/nginx
 RUN chmod -R 777 /var/log/nginx
