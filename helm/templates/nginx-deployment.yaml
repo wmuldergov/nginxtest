@@ -43,6 +43,8 @@ spec:
               value: {{ .Values.image.tag  }}
             - name: CACHING_URL
               value: {{ .Values.route.host  }}
+            - name: ENVIRONMENT
+              value: {{ .Values.environment  }}
           envFrom:
             - secretRef:
                 name: temp-auth-secret
