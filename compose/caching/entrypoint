@@ -18,8 +18,8 @@ echo "$TEMP_AUTH_SECRET" >> /etc/apache2/.htpasswd
 # Check if $ENV is not set to "Prod"
 if [ "$ENVIRONMENT" != "prod" ]; then
     # Remove the specified lines from nginx.conf
-    sed -i '/auth_basic           "Beta Area";/d' nginx.conf
-    sed -i '/auth_basic_user_file \/etc\/apache2\/.htpasswd;/d' nginx.conf
+    sed -i '/auth_basic           "Beta Area";/d' /etc/nginx/nginx.conf
+    sed -i '/auth_basic_user_file \/etc\/apache2\/.htpasswd;/d' /etc/nginx/nginx.conf
 fi
 
 
