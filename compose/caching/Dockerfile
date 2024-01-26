@@ -5,7 +5,7 @@ FROM nginx:stable-alpine
 #Copy the template file to the nginx folder as well for testing
 COPY ./src/caching/nginx.conf /etc/nginx/
 RUN mkdir -p /etc/apache2
-#RUN touch /etc/apache2/.htpasswd
+RUN touch /etc/apache2/TESTFILE
 
 COPY ./src/caching/index.html /usr/share/nginx/html
 COPY ./src/caching/nocachetest.html /usr/share/nginx/html
