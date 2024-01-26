@@ -43,6 +43,9 @@ spec:
               value: {{ .Values.image.tag  }}
             - name: CACHING_URL
               value: {{ .Values.route.host  }}
+          envFrom:
+            - secretRef:
+                name: temp-auth-secret
           imagePullPolicy: IfNotPresent
           image: >-
             {{ .Values.image.repository  }}:{{ .Values.image.tag  }}
@@ -58,16 +61,6 @@ spec:
                 - all
               add:
                 - NET_BIND_SERVICE
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 8080
-            initialDelaySeconds: 5
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 8080
-            initialDelaySeconds: 5
         - name: nginx-fluent-bit-sidecar
           image: 'fluent/fluent-bit:2.2.2'
           resources:
