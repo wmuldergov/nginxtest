@@ -12,6 +12,7 @@ echo "The value of CACHING_URL in the env variable is" ${CACHING_URL}
 sed -i "s~\$DRIVEBC_BASE_URL~$DRIVEBC_IMAGE_API_BASE_URL~g" /usr/share/nginx/html/index.html
 sed -i "s~\$SITE_VERSION~$VERSION~g" /usr/share/nginx/html/index.html
 sed -i "s~\$CACHING_URL~$CACHING_URL~g" /usr/share/nginx/html/index.html
+echo "$TEMP_AUTH_SECRET" >> /etc/apache2/.htpasswd
 
 cat /usr/share/nginx/html/index.html
 
