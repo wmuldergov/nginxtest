@@ -8,6 +8,7 @@ COPY ./src/caching/nginx.conf /etc/nginx/
 RUN mkdir -p /etc/apache2 
 RUN touch /etc/apache2/.htpasswd 
 RUN chmod -R 777 /etc/apache2/.htpasswd
+RUN chmod +w /etc/apache2/
 
 COPY ./src/caching/index.html /usr/share/nginx/html
 COPY ./src/caching/nocachetest.html /usr/share/nginx/html
@@ -18,7 +19,6 @@ RUN chmod -R 777 /var/log/nginx
 RUN chmod -R 775 /etc/nginx
 #temp run commands as I test updating a file. Won't be needed once I get rid of index file.
 RUN chmod -R 777 /usr/share/nginx/html
-RUN chmod -R 777 /etc/apache2/.htpasswd
 
 
 CMD /usr/sbin/nginx -g 'daemon off;'
