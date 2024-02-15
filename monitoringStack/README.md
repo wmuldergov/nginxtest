@@ -15,25 +15,33 @@ Ensure that you have the following lines in your nginx.conf
                       '$status $body_bytes_sent "$http_referer" '
                       '"$http_user_agent" $http_x_forwarded_for $upstream_cache_status $request_time';
 
-Finally add the fluentbit-configmap.yaml to OpenShift. LOKI_GATEWAY_URL
+Finally add the fluentbit-configmap.yaml to OpenShift. Ensure you have the LOKI_GATEWAY_URL set (should be under services in OpenShift)
 
 ### loki
-To start I followed the instructions here to setup loki: https://grafana.com/docs/loki/latest/setup/install/helm/install-monolithic/. Use the values.yaml file in the loki folder. NOTE: There is a bug when you install it where you need to remove the id's from the securityContext in the statefulset YAML.
-
+To start I followed the instructions here to setup loki: https://grafana.com/docs/loki/latest/setup/install/helm/install-monolithic/. Use the values.yaml file in the loki folder here. NOTE: There is a bug when you install it where you need to remove the id's from the securityContext in the statefulset YAML.
 
 You can see the full values.yaml file here if you need: https://github.com/grafana/loki/blob/main/production/helm/loki/values.yaml
 
-`helm install --values values.yaml loki grafana/loki`
+`helm upgrade --install --values values.yaml loki grafana/loki`
 
 ### grafana
 https://github.com/grafana/helm-charts/tree/main/charts/grafana 
 
-`helm install --values values.yaml grafana grafana/grafana`
+`helm upgrade --install --values values.yaml grafana grafana/grafana`
 
-After I got it installed I created a route to be able to see the UI without doing port forwarding. The credentials are stored in a secret.
+After I got it installed I created a route manually to be able to see the UI without doing port forwarding. The credentials are stored in a secret in OpenShift
 
 Used this dashboard as the source
 https://grafana.com/grafana/dashboards/13740-loki-v2-web-analytics-dashboard-for-nginx/
+To use it I would suggest:
+1. Setup the datasource in Grafana. Select Loki and use the gateway service as the hostname.
+1. Use the dashboard.json file in the grafana folder
+1. Pull that into Grafana, but you will need to update the datasource
+    1. Get the guid by going to the data source and pulling it from the URL
+    1. Find and replace the old guid
+    1. Save Changes
+1. Dashboard should now work.
+
 
 ## To-Do
 1. Test with s3 storage
@@ -41,3 +49,9 @@ https://grafana.com/grafana/dashboards/13740-loki-v2-web-analytics-dashboard-for
 1. Fix the bug with loki security context
 1. See how well the system works under load
 1. Try running multiple pods at once
+1. Figure out how to handle large log files, will need to delete the logs somehow. Might be best to investigate using something like promtrail with syslog so logs aren't actually stored in the pod itself.
+
+
+### goaccess notes
+1. Need to use kill 1 command in the goaccess terminal to get it to regenerate
+1. From command line run something like: `oc cp image-caching-5f476f49c5-gqmgs:/logs/index.html goaccess.html` to pull the html file to your desktop for review.
