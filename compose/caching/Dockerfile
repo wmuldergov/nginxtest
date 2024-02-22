@@ -1,5 +1,6 @@
 FROM nginx:stable-alpine
 
+RUN apk add logrotate
 
 #COPY ./src/caching/nginx.conf /etc/nginx/nginx.conf
 #Copy the template file to the nginx folder as well for testing
