@@ -2,4 +2,3 @@ rbac:
   namespaced: true
 
 securityContext:
-  runAsNonRoot: true

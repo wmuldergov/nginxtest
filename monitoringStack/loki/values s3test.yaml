@@ -6,22 +6,37 @@ global:
 loki:
   # Should authentication be enabled
   auth_enabled: false
-  commonConfig:
-    replication_factor: 1
-  storage:
-    type: 'filesystem'
+#  commonConfig:
+#    replication_factor: 1
+#  storage:
+#    type: 'filesystem'
   podSecurityContext:
   securityContext:
   query_scheduler:
     max_outstanding_requests_per_tenant: 2048
+  storage:
+    bucketNames:
+      chunks: chunks
+      ruler: ruler
+      admin: admin
+    type: s3
+    s3:
+      endpoint: minio-1709146361.80c8d5-dev.svc.cluster.local:9000
+      region: na
+      secretAccessKey:  #<AWS secret access key>
+      accessKeyId:  #<AWS access key ID>
+      s3ForcePathStyle: false
+      insecure: true
+
+
 
 gateway:
   podSecurityContext:
     runAsNonRoot: true
 
 
-singleBinary:
-  replicas: 1
+#singleBinary:
+#  replicas: 1
 
 monitoring:
   selfMonitoring:
@@ -42,6 +57,7 @@ monitoring:
 
   serviceMonitor:
     enabled: false
+
   lokiCanary:
     enabled: false
 
@@ -61,3 +77,34 @@ rbac:
 
 test:
   enabled: false
+
+
+write:
+  # -- Number of replicas for the write
+  replicas: 2
+  persistence:
+    # -- Enable volume claims in pod spec
+    volumeClaimsEnabled: false
+    # -- Parameters used for the `data` volume when volumeClaimEnabled if false
+    dataVolumeParameters:
+      emptyDir: {}
+    # -- Enable StatefulSetAutoDeletePVC feature
+    enableStatefulSetAutoDeletePVC: false
+    # -- Size of persistent disk
+    size: 2Gi
+read:
+  # -- Number of replicas for the read
+  replicas: 2
+backend:
+  # -- Number of replicas for the backend
+  replicas: 2
+  persistence:
+    # -- Enable volume claims in pod spec
+    volumeClaimsEnabled: false
+    # -- Parameters used for the `data` volume when volumeClaimEnabled if false
+    dataVolumeParameters:
+      emptyDir: {}
+    # -- Enable StatefulSetAutoDeletePVC feature
+    enableStatefulSetAutoDeletePVC: false
+    # -- Size of persistent disk
+    size: 2Gi
