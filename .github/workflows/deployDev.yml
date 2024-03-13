@@ -48,7 +48,7 @@ jobs:
 #        password: ${{ secrets.BUILDER_TOKEN }}
 
     - name: Push to GitHub Packages
-      uses: redhat-actions/push-to-registry@v2.9
+      uses: redhat-actions/push-to-registry@v2
       with:
          image: ${{ steps.build_image.outputs.image }}
          tags: ${{ steps.build_image.outputs.tags }}
