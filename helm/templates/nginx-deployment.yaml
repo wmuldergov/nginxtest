@@ -38,6 +38,7 @@ spec:
               mountPath: /logs
             - name: cam-images-pvc
               mountPath: /app/webcams
+              readOnly: true
           env:
             - name: DRIVEBC_IMAGE_API_BASE_URL
               valueFrom:
