@@ -16,40 +16,10 @@ Ensure that you have the following lines in your nginx.conf
 
 Finally add the _fluentbit-configmap.yaml_ to OpenShift. Ensure you have the LOKI_GATEWAY_URL set correctly (You should be able to get this from Networking -> Services)
 
-### Minio
-If you need to, for testing purposes you can setup a MINIO instance for S3 storage before installing LOKI.
-Run `helm install --set resources.requests.memory=512Mi --set replicas=1 --set persistence.enabled=false --set mode=standalone --set rootUser=rootuser,rootPassword=rootpass123 --generate-name --set securityContext: {} minio/minio`
 
-To connect to the console create a route like this
-```
-kind: Route
-apiVersion: route.openshift.io/v1
-metadata:
-  name: minio-console
-  namespace: 80c8d5-dev
-  labels:
-    app: minio
-    app.kubernetes.io/managed-by: Helm
-    chart: minio-5.0.15
-    heritage: Helm
-    release: minio-1709146361
-spec:
-  to:
-    kind: Service
-    name: minio-1709146361-console
-  tls:
-    termination: edge
-    insecureEdgeTerminationPolicy: Redirect
-  port:
-    targetPort: http
-```
-
-Login to the console
 
 ### loki
 To start I followed the instructions here to setup loki: https://grafana.com/docs/loki/latest/setup/install/helm/install-scalable/. Use the values.yaml file in the loki folder in this repo as I had to make some changes.
-
-NOTE: There is a bug when you install it where you need to remove the id's from the securityContext in the statefulset YAML. I still need to fix it
 
 You can see the full values.yaml file here if you need: https://github.com/grafana/loki/blob/main/production/helm/loki/values.yaml
 
@@ -77,12 +47,12 @@ To use it I would suggest:
 
 
 ## To-Do
-1. Fix the bug with loki security context
 1. See how well the system works under load
 1. Try running multiple ngix pods at once
 1. Figure out how to handle large log files, will need to delete the logs somehow. Might be best to investigate using something like promtrail with syslog so logs aren't actually stored in the pod itself.
 
 
 ### goaccess notes
+Not currently planning to use this, but could be used as a backup where we move all log files to an s3 bucket on a daily basis and then have goaccess pull those logs on a daily and/or weekly basis so that people get insight into site stats.
 1. Need to use kill 1 command in the goaccess terminal to get it to regenerate
 1. From command line run something like: `oc cp image-caching-5f476f49c5-gqmgs:/logs/index.html goaccess.html` to pull the html file to your desktop for review.

@@ -16,22 +16,24 @@ loki:
     max_outstanding_requests_per_tenant: 2048
   storage:
     bucketNames:
-      chunks: chunks
-      ruler: ruler
-      admin: admin
+      chunks: #<BucketName>
+      ruler: #<BucketName>
+      admin: #<BucketName>
     type: s3
     s3:
-      endpoint: minio-1709146361.80c8d5-dev.svc.cluster.local:9000
+      endpoint: 
       region: na
       secretAccessKey:  #<AWS secret access key>
       accessKeyId:  #<AWS access key ID>
-      s3ForcePathStyle: false
-      insecure: true
+      s3ForcePathStyle: true
+      insecure: false
 
 
 
 gateway:
   podSecurityContext:
+    runAsNonRoot: true
+  securityContext:
     runAsNonRoot: true
 
 
@@ -84,27 +86,36 @@ write:
   replicas: 2
   persistence:
     # -- Enable volume claims in pod spec
-    volumeClaimsEnabled: false
+    volumeClaimsEnabled: true
     # -- Parameters used for the `data` volume when volumeClaimEnabled if false
     dataVolumeParameters:
       emptyDir: {}
     # -- Enable StatefulSetAutoDeletePVC feature
     enableStatefulSetAutoDeletePVC: false
     # -- Size of persistent disk
-    size: 2Gi
+    size: 1Gi
 read:
   # -- Number of replicas for the read
   replicas: 2
+  persistence:
+    # -- Enable StatefulSetAutoDeletePVC feature
+    enableStatefulSetAutoDeletePVC: true
+    # -- Size of persistent disk
+    size: 1Gi
 backend:
   # -- Number of replicas for the backend
   replicas: 2
   persistence:
     # -- Enable volume claims in pod spec
-    volumeClaimsEnabled: false
+    volumeClaimsEnabled: true
     # -- Parameters used for the `data` volume when volumeClaimEnabled if false
     dataVolumeParameters:
       emptyDir: {}
     # -- Enable StatefulSetAutoDeletePVC feature
-    enableStatefulSetAutoDeletePVC: false
+    enableStatefulSetAutoDeletePVC: true
     # -- Size of persistent disk
-    size: 2Gi
+    size: 1Gi
+
+sidecar:
+  rules:
+    enabled: false
