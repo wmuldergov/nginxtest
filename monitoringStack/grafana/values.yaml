@@ -2,3 +2,17 @@ rbac:
   namespaced: true
 
 securityContext:
+  runAsNonRoot: true
+  runAsUser: null
+  runAsGroup: null
+  fsGroup: null
+
+initChownData:
+  ## If false, data ownership will not be reset at startup
+  ## This allows the grafana-server to be run with an arbitrary user
+  ##
+  enabled: false
+
+persistence:
+  enabled: true
+  size: 1Gi
