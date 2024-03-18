@@ -30,6 +30,6 @@ RUN sed -i 's/\r$//g' /entrypoint && chmod +x /entrypoint
 #setup logrotate
 COPY ./src/caching/nginx-logrotate.conf /etc/logrotate.d/nginx
 RUN touch /var/lib/logrotate.status
-RUN chmod 664 /var/lib/logrotate.status
+RUN chmod 666 /var/lib/logrotate.status
 
 ENTRYPOINT ["/entrypoint"]
