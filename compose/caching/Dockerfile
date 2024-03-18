@@ -1,7 +1,7 @@
 FROM nginx:stable-alpine
 
 RUN apk add logrotate
-RUN apk add --update busybox-suid
+#RUN apk add --update busybox-initscripts
 
 #COPY ./src/caching/nginx.conf /etc/nginx/nginx.conf
 #Copy the template file to the nginx folder as well for testing
@@ -22,10 +22,12 @@ RUN chmod -R 775 /etc/nginx
 #temp run commands as I test updating a file. Won't be needed once I get rid of index file.
 RUN chmod -R 777 /usr/share/nginx/html
 
-
 CMD /usr/sbin/nginx -g 'daemon off;'
 
 COPY ./compose/caching/entrypoint /
 RUN sed -i 's/\r$//g' /entrypoint && chmod +x /entrypoint
+
+#setup logrotate
+COPY ./src/caching/nginx-logrotate.conf /etc/logrotate.d/nginx
 
 ENTRYPOINT ["/entrypoint"]
