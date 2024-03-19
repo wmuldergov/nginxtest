@@ -23,7 +23,7 @@ RUN chmod -R 775 /etc/nginx
 RUN chmod -R 777 /usr/share/nginx/html
 
 #CMD /usr/sbin/nginx -g 'daemon off;'
-CMD ["sh", "-c", "crond -f -L /dev/stdout & nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "crond -f -L /dev/stdout -l 0 & nginx -g 'daemon off;'"]
 
 COPY ./compose/caching/entrypoint /
 RUN sed -i 's/\r$//g' /entrypoint && chmod +x /entrypoint
