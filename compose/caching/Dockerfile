@@ -24,8 +24,7 @@ RUN chmod -R 775 /etc/nginx
 #temp run commands as I test updating a file. Won't be needed once I get rid of index file.
 RUN chmod -R 777 /usr/share/nginx/html
 
-#CMD /usr/sbin/nginx -g 'daemon off;'
-CMD ["sh", "-c", "crond -f -L /dev/stdout -l 0 & nginx -g 'daemon off;'"]
+
 
 COPY ./compose/caching/entrypoint /
 RUN sed -i 's/\r$//g' /entrypoint && chmod +x /entrypoint
@@ -33,9 +32,14 @@ RUN sed -i 's/\r$//g' /entrypoint && chmod +x /entrypoint
 #setup logrotate
 COPY ./src/caching/nginx-logrotate.conf /etc/logrotate.d/nginx
 COPY ./src/caching/logrotate-job.conf /etc/periodic/15min/logrotate
+COPY ./src/caching/crontab.conf /var/spool/cron/crontabs/defineduser
 RUN chmod +x /etc/periodic/15min/logrotate
 RUN chmod -R 777 /var/spool/cron/crontabs/root
+RUN chmod -R 777 /var/spool/cron/crontabs/defineduser
 
 USER defineduser
+
+#CMD /usr/sbin/nginx -g 'daemon off;'
+CMD ["sh", "-c", "crond -f -L /dev/stdout -l 0 & nginx -g 'daemon off;'"]
 
 ENTRYPOINT ["/entrypoint"]
