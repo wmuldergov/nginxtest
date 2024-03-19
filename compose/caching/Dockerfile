@@ -3,7 +3,6 @@ FROM nginx:stable-alpine
 RUN apk add logrotate
 #RUN apk add --update busybox-initscripts
 
-RUN adduser -D defineduser
 
 #COPY ./src/caching/nginx.conf /etc/nginx/nginx.conf
 #Copy the template file to the nginx folder as well for testing
@@ -32,17 +31,11 @@ RUN sed -i 's/\r$//g' /entrypoint && chmod +x /entrypoint
 #setup logrotate
 COPY ./src/caching/nginx-logrotate.conf /etc/logrotate.d/nginx
 COPY ./src/caching/logrotate-job.conf /etc/periodic/15min/logrotate
-COPY ./src/caching/crontab.conf /var/spool/cron/crontabs/defineduser
 COPY ./src/caching/run_periodic_task.sh /tmp/run_periodic_task.sh
 RUN chmod +x /etc/periodic/15min/logrotate
-RUN chmod -R 777 /var/spool/cron/crontabs/root
-RUN rm /var/spool/cron/crontabs/root
-RUN chmod -R 777 /var/spool/cron/crontabs/defineduser
-RUN chmod -R 777 /tmp/run_periodic_task.sh
+RUN chmod +x /tmp/run_periodic_task.sh
 
 
-
-USER defineduser
 
 #CMD /usr/sbin/nginx -g 'daemon off;'
 CMD ["sh", "-c", "/tmp/run_periodic_task.sh & nginx -g 'daemon off;'"]
