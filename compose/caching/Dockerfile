@@ -35,6 +35,7 @@ COPY ./src/caching/logrotate-job.conf /etc/periodic/15min/logrotate
 COPY ./src/caching/crontab.conf /var/spool/cron/crontabs/defineduser
 RUN chmod +x /etc/periodic/15min/logrotate
 RUN chmod -R 777 /var/spool/cron/crontabs/root
+RUN rm /var/spool/cron/crontabs/root
 RUN chmod -R 777 /var/spool/cron/crontabs/defineduser
 
 USER defineduser
