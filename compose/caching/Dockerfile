@@ -22,7 +22,7 @@ RUN chmod -R 775 /etc/nginx
 #temp run commands as I test updating a file. Won't be needed once I get rid of index file.
 RUN chmod -R 777 /usr/share/nginx/html
 
-CMD crond -f -L /dev/stdout && /usr/sbin/nginx -g 'daemon off;'
+CMD /usr/sbin/nginx -g 'daemon off;'
 
 COPY ./compose/caching/entrypoint /
 RUN sed -i 's/\r$//g' /entrypoint && chmod +x /entrypoint

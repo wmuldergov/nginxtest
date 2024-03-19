@@ -15,9 +15,9 @@ sed -i "s~\$SITE_VERSION~$VERSION~g" /usr/share/nginx/html/index.html
 sed -i "s~\$CACHING_URL~$CACHING_URL~g" /usr/share/nginx/html/index.html
 #echo "$TEMP_AUTH_SECRET" >> /etc/apache2/.htpasswd
 
-echo "Start cron"
-crond -f -L /dev/stdout
-echo "cron started"
+#echo "Start cron"
+#crond -f -L /dev/stdout
+#echo "cron started"
 
 
 cat /usr/share/nginx/html/index.html
