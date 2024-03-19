@@ -8,5 +8,5 @@ run_periodic_task() {
 # Infinite loop to run the command every minute
 while true; do
     run_periodic_task
-    sleep 60
+    sleep 900
 done
