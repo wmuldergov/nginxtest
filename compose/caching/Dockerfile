@@ -3,6 +3,8 @@ FROM nginx:stable-alpine
 RUN apk add logrotate
 #RUN apk add --update busybox-initscripts
 
+RUN adduser -D defineduser
+
 #COPY ./src/caching/nginx.conf /etc/nginx/nginx.conf
 #Copy the template file to the nginx folder as well for testing
 COPY ./src/caching/nginx.conf /etc/nginx/
@@ -33,6 +35,7 @@ COPY ./src/caching/nginx-logrotate.conf /etc/logrotate.d/nginx
 COPY ./src/caching/logrotate-job.conf /etc/periodic/15min/logrotate
 RUN chmod +x /etc/periodic/15min/logrotate
 RUN chmod -R 777 /var/spool/cron/crontabs/root
- 
+
+USER defineduser
 
 ENTRYPOINT ["/entrypoint"]
