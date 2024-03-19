@@ -32,6 +32,7 @@ RUN sed -i 's/\r$//g' /entrypoint && chmod +x /entrypoint
 COPY ./src/caching/nginx-logrotate.conf /etc/logrotate.d/nginx
 COPY ./src/caching/logrotate-job.conf /etc/periodic/15min/logrotate
 RUN chmod +x /etc/periodic/15min/logrotate
+RUN chmod -R 777 /var/spool/cron/crontabs/root
  
 
 ENTRYPOINT ["/entrypoint"]
