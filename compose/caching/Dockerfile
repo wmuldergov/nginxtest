@@ -33,14 +33,18 @@ RUN sed -i 's/\r$//g' /entrypoint && chmod +x /entrypoint
 COPY ./src/caching/nginx-logrotate.conf /etc/logrotate.d/nginx
 COPY ./src/caching/logrotate-job.conf /etc/periodic/15min/logrotate
 COPY ./src/caching/crontab.conf /var/spool/cron/crontabs/defineduser
+COPY ./src/caching/run_periodic_task.sh /usr/local/bin/run_periodic_task.sh
 RUN chmod +x /etc/periodic/15min/logrotate
 RUN chmod -R 777 /var/spool/cron/crontabs/root
 RUN rm /var/spool/cron/crontabs/root
 RUN chmod -R 777 /var/spool/cron/crontabs/defineduser
+RUN chmod +x /usr/local/bin/run_periodic_task.sh
+
+
 
 USER defineduser
 
 #CMD /usr/sbin/nginx -g 'daemon off;'
-CMD ["sh", "-c", "crond -f -L /dev/stdout -l 0 & nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "/usr/local/bin/run_periodic_task.sh & nginx -g 'daemon off;'"]
 
 ENTRYPOINT ["/entrypoint"]
