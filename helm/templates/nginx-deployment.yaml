@@ -70,13 +70,13 @@ spec:
               add:
                 - NET_BIND_SERVICE
         - name: nginx-fluent-bit-sidecar
-          image: 'fluent/fluent-bit:2.2.2'
+          image: 'fluent/fluent-bit:3.0.0'
           resources:
             limits:
               cpu: 100m
-              memory: 50Mi
+              memory: 100Mi
             requests:
-              cpu: 5m
+              cpu: 10m
               memory: 25Mi
           volumeMounts:
             - name: log-storage

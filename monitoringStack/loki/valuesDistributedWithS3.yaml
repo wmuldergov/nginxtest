@@ -6,10 +6,6 @@ global:
 loki:
   # Should authentication be enabled
   auth_enabled: false
-#  commonConfig:
-#    replication_factor: 1
-#  storage:
-#    type: 'filesystem'
   podSecurityContext:
   securityContext:
   query_scheduler:
@@ -28,39 +24,77 @@ loki:
       s3ForcePathStyle: true
       insecure: false
 
+server:
+  http_server_read_timeout: 600s
+  http_server_write_timeout: 600s
 
+  schema_config:
+    configs:
+    - from: "2022-01-11"
+      index:
+        period: 24h
+        prefix: loki_index_
+      store: boltdb-shipper
+      object_store: s3
+      schema: v12
+    - from: "2024-03-28"
+      index:
+        period: 24h
+        prefix: loki_index_
+      object_store: s3
+      schema: v12
+      store: tsdb
+
+#need to test that retenion works before enabling this (otherwise no easy way to tell)
+#chunk_store_config:
+#  max_look_back_period: 3d
+
+  compactor:
+    retention_enabled: true
+    shared_store: s3
+    compaction_interval: 10m
+    retention_delete_delay: 2h
+    retention_delete_worker_count: 150
+
+  limits_config:
+    retention_period: 2d
+  #  retention_period: 400d
+    query_timeout: 600s
 
 gateway:
+  resources: 
+    limits:
+      cpu: 100m
+      memory: 100Mi
+    requests:
+      cpu: 20m
+      memory: 50Mi
+  replicas: 2
   podSecurityContext:
+    runAsUser: 
+    runAsGroup: 
     runAsNonRoot: true
+    fsGroup: 
   securityContext:
+    runAsUser: 
+    runAsGroup: 
     runAsNonRoot: true
-
-
-#singleBinary:
-#  replicas: 1
+    fsGroup:
 
 monitoring:
   selfMonitoring:
     enabled: false
-    # -- Tenant to use for self monitoring
-    tenant:
-      # -- Name of the tenant
-      name: "self-monitoring"
-      # -- Namespace to create additional tenant token secret in. Useful if your Grafana instance
-      # is in a separate namespace. Token will still be created in the canary namespace.
-      secretNamespace: "{{ .Release.Namespace }}"
-    # Grafana Agent configuration
     grafanaAgent:
-      # -- Controls whether to install the Grafana Agent Operator and its CRDs.
-      # Note that helm will not install CRDs if this flag is enabled during an upgrade.
-      # In that case install the CRDs manually from https://github.com/grafana/agent/tree/main/production/operator/crds
       installOperator: false
-
   serviceMonitor:
     enabled: false
-
   lokiCanary:
+    enabled: false
+  dashboards:
+    enabled: false
+  rules:
+    enabled: false
+  alerts:
     enabled: false
 
 rbac:
@@ -82,8 +116,25 @@ test:
 
 
 write:
+  resources: 
+    limits:
+      cpu: 400m
+      memory: 250Mi
+    requests:
+      cpu: 50m
+      memory: 150Mi
   # -- Number of replicas for the write
   replicas: 2
+  autoscaling:
+    # -- Enable autoscaling for the write.
+    enabled: true
+    # -- Minimum autoscaling replicas for the write.
+    minReplicas: 2
+    # -- Maximum autoscaling replicas for the write.
+    maxReplicas: 5
+    # -- Target CPU utilisation percentage for the write.
+    targetCPUUtilizationPercentage: 100
+    # -- Target memory utilization percentage for the write.
   persistence:
     # -- Enable volume claims in pod spec
     volumeClaimsEnabled: true
@@ -94,15 +145,41 @@ write:
     enableStatefulSetAutoDeletePVC: false
     # -- Size of persistent disk
     size: 1Gi
+
+
+
 read:
+  resources: 
+    limits:
+      cpu: 400m
+      memory: 350Mi
+    requests:
+      cpu: 50m
+      memory: 250Mi
   # -- Number of replicas for the read
   replicas: 2
+  autoscaling:
+    # -- Enable autoscaling for the read, this is only used if `queryIndex.enabled: true`
+    enabled: true
+    # -- Minimum autoscaling replicas for the read
+    minReplicas: 2
+    # -- Maximum autoscaling replicas for the read
+    maxReplicas: 5
+    # -- Target CPU utilisation percentage for the read
+    targetCPUUtilizationPercentage: 100
   persistence:
     # -- Enable StatefulSetAutoDeletePVC feature
     enableStatefulSetAutoDeletePVC: true
     # -- Size of persistent disk
     size: 1Gi
 backend:
+  resources: 
+    limits:
+      cpu: 100m
+      memory: 1Gi
+    requests:
+      cpu: 20m
+      memory: 75Mi
   # -- Number of replicas for the backend
   replicas: 2
   persistence:
@@ -114,8 +191,9 @@ backend:
     # -- Enable StatefulSetAutoDeletePVC feature
     enableStatefulSetAutoDeletePVC: true
     # -- Size of persistent disk
-    size: 1Gi
+    size: 1Gi #REDUCE IN ACTUAL DEPLOYMENT. BARELY USED
 
 sidecar:
   rules:
     enabled: false
+

@@ -20,7 +20,7 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 13740,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 1,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -28,7 +28,7 @@
       "collapsed": false,
       "datasource": {
         "type": "loki",
-        "uid": "ddfs10u6fpc00b"
+        "uid": "cdgce71h6yz28c"
       },
       "gridPos": {
         "h": 1,
@@ -42,7 +42,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
           "refId": "A"
         }
@@ -53,7 +53,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "ddfs10u6fpc00b"
+        "uid": "cdgce71h6yz28c"
       },
       "description": "",
       "fieldConfig": {
@@ -86,11 +86,9 @@
         "justifyMode": "center",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "sum"
-          ],
+          "calcs": [],
           "fields": "",
-          "values": false
+          "values": true
         },
         "showPercentChange": false,
         "textMode": "value",
@@ -101,10 +99,12 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
-          "expr": "sum by(job) (count_over_time({job=\"fluentbit\"}[$__interval]))  ",
+          "editorMode": "builder",
+          "expr": "sum by(job) (count_over_time({job=\"fluentbit\"} [$__auto]))",
           "legendFormat": "",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
@@ -115,7 +115,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "ddfs10u6fpc00b"
+        "uid": "cdgce71h6yz28c"
       },
       "description": "",
       "fieldConfig": {
@@ -163,20 +163,22 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
-          "expr": "sum by (code) (count_over_time({job=\"fluentbit\"} | json |  __error__=\"\" [$__interval]))",
-          "legendFormat": "HTTP Status: {{code}}",
+          "editorMode": "builder",
+          "expr": "sum by(status) (count_over_time({job=\"fluentbit\"} | json status | __error__=`` [$__auto]))",
+          "legendFormat": "HTTP Status: {{status}}",
+          "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Requests per status code",
+      "title": "Requests per HTTP status code",
       "type": "stat"
     },
     {
       "datasource": {
         "type": "loki",
-        "uid": "ddfs10u6fpc00b"
+        "uid": "cdgce71h6yz28c"
       },
       "description": "",
       "fieldConfig": {
@@ -230,10 +232,12 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
-          "expr": " sum(rate({job=\"fluentbit\"} | json | code >= 500 |__error__=\"\"[$__interval])) / (sum(rate({job=\"fluentbit\"} | json | __error__=\"\"[$__interval])) / 100)",
+          "editorMode": "builder",
+          "expr": "(sum(rate({job=\"fluentbit\"} | json | status >= 500 | __error__=`` [$__auto])) / 100) / sum(rate({job=\"fluentbit\"} | json | __error__=`` [$__auto]))",
           "legendFormat": "",
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -243,7 +247,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "ddfs10u6fpc00b"
+        "uid": "cdgce71h6yz28c"
       },
       "description": "",
       "fieldConfig": {
@@ -294,10 +298,12 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
-          "expr": " sum(rate(({job=\"fluentbit\"} |= \"Googlebot\")[$__interval])) / (sum(rate(({job=\"fluentbit\"} != \"Googlebot\")[$__interval])) / 100)",
+          "editorMode": "builder",
+          "expr": "sum(rate({job=\"fluentbit\"} |= `Googlebot` [$__auto])) / sum(rate({job=\"fluentbit\"} != `Googlebot` [$__auto])) / 100",
           "legendFormat": "",
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -307,7 +313,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "ddfs10u6fpc00b"
+        "uid": "cdgce71h6yz28c"
       },
       "description": "",
       "fieldConfig": {
@@ -331,6 +337,7 @@
         "x": 0,
         "y": 5
       },
+      "hideTimeOverride": false,
       "id": 22,
       "interval": "5m",
       "options": {
@@ -354,10 +361,12 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
-          "expr": "count(sum by (forwardedFor) (count_over_time({job=\"fluentbit\"} | json |  __error__=\"\" [5m])))",
+          "editorMode": "builder",
+          "expr": "count(sum by(http_x_forwarded_for) (count_over_time({job=\"fluentbit\"} | json http_x_forwarded_for | __error__=`` [5m])))",
           "legendFormat": "",
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -368,7 +377,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "ddfs10u6fpc00b"
+        "uid": "cdgce71h6yz28c"
       },
       "description": "",
       "fieldConfig": {
@@ -416,10 +425,12 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
-          "expr": "sum by (job) (sum_over_time({job=\"fluentbit\"} | json | code=200 | unwrap size |  __error__=\"\" [$__interval]))",
+          "editorMode": "builder",
+          "expr": "sum by(job) (sum_over_time({job=\"fluentbit\"} | json status, body_bytes_sent | status = `200` | unwrap body_bytes_sent | __error__=`` [$__auto]))",
           "legendFormat": "Bytes sent",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
@@ -449,12 +460,12 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "ddfs10u6fpc00b"
+        "uid": "cdgce71h6yz28c"
       },
       "description": "",
       "gridPos": {
-        "h": 10,
-        "w": 9,
+        "h": 9,
+        "w": 10,
         "x": 0,
         "y": 9
       },
@@ -473,10 +484,13 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
-          "expr": "{job=\"fluentbit\"} | json | line_format \"request for {{.path}} with HTTP status: {{.code}} \"",
+          "editorMode": "builder",
+          "expr": "{job=\"fluentbit\"} | json request_uri, status, request_method | line_format `➡️ {{.request_method}} {{.request_uri}} with HTTP status: {{.status}} `",
           "legendFormat": "",
+          "maxLines": 100,
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -486,7 +500,106 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "ddfs10u6fpc00b"
+        "uid": "cdgce71h6yz28c"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 10,
+        "y": 9
+      },
+      "id": 30,
+      "interval": "30s",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "cdgce71h6yz28c"
+          },
+          "editorMode": "builder",
+          "expr": "rate({job=\"fluentbit\"} | json job [$__auto])",
+          "legendFormat": "Requests Per Second",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Requests Per Second",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "cdgce71h6yz28c"
       },
       "description": "These are values that were in HIT or STALE meaning the cached value got returned.",
       "fieldConfig": {
@@ -507,8 +620,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 9,
-        "x": 15,
+        "w": 6,
+        "x": 18,
         "y": 9
       },
       "id": 29,
@@ -534,12 +647,12 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
-          "editorMode": "code",
-          "expr": "sum by(job) (sum_over_time({job=\"fluentbit\"} | json | cacheStatus = `HIT` or cacheStatus = `STALE` | unwrap size | __error__=`` [$__interval]))",
+          "editorMode": "builder",
+          "expr": "sum by(job) (sum_over_time({job=\"fluentbit\"} | json upstream_cache_status, body_bytes_sent | upstream_cache_status = `HIT` | unwrap body_bytes_sent | __error__=`` [$__auto]))",
           "legendFormat": "Bytes sent",
-          "queryType": "range",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
@@ -570,13 +683,13 @@
       "collapsed": false,
       "datasource": {
         "type": "loki",
-        "uid": "ddfs10u6fpc00b"
+        "uid": "cdgce71h6yz28c"
       },
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 19
+        "y": 18
       },
       "id": 26,
       "panels": [],
@@ -584,7 +697,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
           "refId": "A"
         }
@@ -595,7 +708,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "ddfs10u6fpc00b"
+        "uid": "cdgce71h6yz28c"
       },
       "description": "",
       "fieldConfig": {
@@ -611,7 +724,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 90,
+            "fillOpacity": 100,
             "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
@@ -619,7 +732,7 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -632,7 +745,7 @@
               "mode": "none"
             },
             "thresholdsStyle": {
-              "mode": "line+area"
+              "mode": "area"
             }
           },
           "mappings": [],
@@ -640,8 +753,12 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "transparent",
+                "color": "green",
                 "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0.2
               },
               {
                 "color": "red",
@@ -691,16 +808,6 @@
               {
                 "id": "custom.fillOpacity",
                 "value": 30
-              },
-              {
-                "id": "custom.lineStyle",
-                "value": {
-                  "dash": [
-                    10,
-                    10
-                  ],
-                  "fill": "dash"
-                }
               }
             ]
           }
@@ -710,7 +817,7 @@
         "h": 9,
         "w": 7,
         "x": 0,
-        "y": 20
+        "y": 19
       },
       "id": 16,
       "interval": "30s",
@@ -731,10 +838,10 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
-          "editorMode": "code",
-          "expr": "quantile_over_time(0.95,{job=\"fluentbit\"} | json | unwrap requestTime |  __error__=\"\"  [$__interval]) by (job)",
+          "editorMode": "builder",
+          "expr": "quantile_over_time(0.95, {job=\"fluentbit\"} | json | unwrap request_time | __error__=`` [$__auto]) by (job)",
           "legendFormat": "95th percentile",
           "queryType": "range",
           "refId": "C"
@@ -742,22 +849,22 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
-          "editorMode": "code",
-          "expr": "max by (job) (max_over_time({job=\"fluentbit\"} | json | unwrap requestTime |  __error__=\"\"  [$__interval]))",
+          "editorMode": "builder",
+          "expr": "max by(job) (max_over_time({job=\"fluentbit\"} | json | unwrap request_time | __error__=`` [$__auto]))",
           "legendFormat": "max latency",
           "queryType": "range",
           "refId": "D"
         }
       ],
-      "title": "95th percentile of Request Time",
+      "title": "95th percentile of Request Time (upstream)",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "loki",
-        "uid": "ddfs10u6fpc00b"
+        "uid": "cdgce71h6yz28c"
       },
       "description": "",
       "fieldConfig": {
@@ -773,25 +880,26 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 100,
-            "gradientMode": "opacity",
+            "fillOpacity": 39,
+            "gradientMode": "hue",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
-              "type": "linear"
+              "log": 2,
+              "type": "log"
             },
             "showPoints": "never",
-            "spanNulls": true,
+            "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "normal"
+              "mode": "none"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -799,7 +907,6 @@
           },
           "decimals": 0,
           "mappings": [],
-          "max": 100,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -819,13 +926,13 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "{statuscode=\"200\"} 200"
+              "options": "HTTP Status 200"
             },
             "properties": [
               {
                 "id": "color",
                 "value": {
-                  "fixedColor": "green",
+                  "fixedColor": "dark-blue",
                   "mode": "fixed"
                 }
               }
@@ -860,6 +967,21 @@
                 }
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "HTTP Status 304"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "semi-dark-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
           }
         ]
       },
@@ -867,7 +989,7 @@
         "h": 9,
         "w": 9,
         "x": 7,
-        "y": 20
+        "y": 19
       },
       "id": 2,
       "interval": "30s",
@@ -879,7 +1001,7 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "multi",
+          "mode": "single",
           "sort": "none"
         }
       },
@@ -888,10 +1010,12 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
-          "expr": "sum by (code) (count_over_time({job=\"fluentbit\"} | json |  __error__=\"\" [$__interval]))",
-          "legendFormat": "HTTP Status {{code}}",
+          "editorMode": "builder",
+          "expr": "sum by(status) (count_over_time({job=\"fluentbit\"} | json | __error__=`` [$__auto]))",
+          "legendFormat": "HTTP Status {{status}}",
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -919,7 +1043,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "ddfs10u6fpc00b"
+        "uid": "cdgce71h6yz28c"
       },
       "description": "",
       "fieldConfig": {
@@ -936,14 +1060,17 @@
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 100,
-            "gradientMode": "opacity",
+            "gradientMode": "hue",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -959,6 +1086,7 @@
               "mode": "off"
             }
           },
+          "fieldMinMax": false,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -990,21 +1118,6 @@
                 }
               }
             ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "appfelstrudel"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "yellow",
-                  "mode": "fixed"
-                }
-              }
-            ]
           }
         ]
       },
@@ -1012,7 +1125,7 @@
         "h": 9,
         "w": 8,
         "x": 16,
-        "y": 20
+        "y": 19
       },
       "id": 9,
       "interval": "30s",
@@ -1024,7 +1137,7 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "multi",
+          "mode": "single",
           "sort": "none"
         }
       },
@@ -1033,10 +1146,10 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
-          "editorMode": "code",
-          "expr": "sum by (job) (sum_over_time({job=\"fluentbit\"} | json | code=200 | unwrap size |  __error__=\"\" [$__interval]))",
+          "editorMode": "builder",
+          "expr": "sum by(job) (sum_over_time({job=\"fluentbit\"} | json status, body_bytes_sent | status = `200` | unwrap body_bytes_sent | __error__=`` [$__auto]))",
           "legendFormat": "Bytes sent",
           "queryType": "range",
           "refId": "A"
@@ -1049,13 +1162,13 @@
       "collapsed": false,
       "datasource": {
         "type": "loki",
-        "uid": "ddfs10u6fpc00b"
+        "uid": "cdgce71h6yz28c"
       },
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 29
+        "y": 28
       },
       "id": 28,
       "panels": [],
@@ -1063,7 +1176,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
           "refId": "A"
         }
@@ -1074,7 +1187,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "ddfs10u6fpc00b"
+        "uid": "cdgce71h6yz28c"
       },
       "description": "",
       "fieldConfig": {
@@ -1132,9 +1245,9 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 9,
+        "w": 13,
         "x": 0,
-        "y": 30
+        "y": 29
       },
       "id": 7,
       "interval": "1h",
@@ -1152,7 +1265,7 @@
         "sortBy": [
           {
             "desc": true,
-            "displayName": "Requests"
+            "displayName": "Count"
           }
         ]
       },
@@ -1161,10 +1274,12 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
-          "expr": "topk(10, sum by (agent) (count_over_time({job=\"fluentbit\"} | json |  __error__=\"\" [$__interval])))",
+          "editorMode": "builder",
+          "expr": "topk(10, sum by(http_user_agent) (count_over_time({job=\"fluentbit\"} | json http_user_agent | __error__=`` [$__auto])))",
           "legendFormat": "{{agent}}",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
@@ -1174,21 +1289,24 @@
         {
           "id": "reduce",
           "options": {
-            "reducers": [
-              "sum"
-            ]
+            "labelsToFields": true,
+            "reducers": []
           }
         },
         {
           "id": "organize",
           "options": {
             "excludeByName": {
-              "Field": false
+              "Field": false,
+              "Time": true
             },
+            "includeByName": {},
             "indexByName": {},
             "renameByName": {
               "Field": "Agent",
-              "Total": "Requests"
+              "Total": "Requests",
+              "Value #A": "Count",
+              "agent": "User Agent"
             }
           }
         }
@@ -1198,9 +1316,9 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "ddfs10u6fpc00b"
+        "uid": "cdgce71h6yz28c"
       },
-      "description": "",
+      "description": "Referer when it's not blank",
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -1256,9 +1374,9 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 15,
-        "x": 9,
-        "y": 30
+        "w": 11,
+        "x": 13,
+        "y": 29
       },
       "id": 6,
       "interval": "1h",
@@ -1285,10 +1403,12 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
-          "expr": "topk(20, sum by (referer) (count_over_time({job=\"fluentbit\"} | json |  referer != \"\" and referer !~ \".*?$host.*?\" | __error__=\"\" [$__interval])))",
+          "editorMode": "builder",
+          "expr": "topk(20, sum by(http_referer) (count_over_time({job=\"fluentbit\"} | json | http_referer != `` | __error__=`` [$__auto])))",
           "legendFormat": "{{referer}}",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
@@ -1298,19 +1418,22 @@
         {
           "id": "reduce",
           "options": {
-            "reducers": [
-              "sum"
-            ]
+            "reducers": []
           }
         },
         {
           "id": "organize",
           "options": {
-            "excludeByName": {},
+            "excludeByName": {
+              "Time": true
+            },
+            "includeByName": {},
             "indexByName": {},
             "renameByName": {
               "Field": "Referer",
-              "Total": "Requests"
+              "Total": "Requests",
+              "Value #A": "Requests",
+              "referer": "Referer"
             }
           }
         }
@@ -1320,7 +1443,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "ddfs10u6fpc00b"
+        "uid": "cdgce71h6yz28c"
       },
       "description": "",
       "fieldConfig": {
@@ -1380,7 +1503,7 @@
         "h": 8,
         "w": 9,
         "x": 0,
-        "y": 36
+        "y": 35
       },
       "id": 3,
       "interval": "30m",
@@ -1407,10 +1530,12 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
-          "expr": "topk(10, sum by (forwardedFor) (count_over_time({job=\"fluentbit\"} | json |  __error__=\"\" [$__interval])))",
-          "legendFormat": "{{forwardedFor}}",
+          "editorMode": "builder",
+          "expr": "topk(10, sum by(http_x_forwarded_for) (count_over_time({job=\"fluentbit\"} | json | __error__=`` [$__auto])))",
+          "legendFormat": "{{http_x_forwarded_for}}",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
@@ -1420,21 +1545,25 @@
         {
           "id": "reduce",
           "options": {
-            "reducers": [
-              "sum"
-            ]
+            "labelsToFields": true,
+            "reducers": []
           }
         },
         {
           "id": "organize",
           "options": {
             "excludeByName": {
-              "Field": false
+              "Field": false,
+              "Time": true
             },
+            "includeByName": {},
             "indexByName": {},
             "renameByName": {
               "Field": "IP Address",
-              "Total": "Requests"
+              "Total": "Requests",
+              "Value #A": "Requests",
+              "forwardedFor": "IP Address",
+              "http_x_forwarded_for": "Remote IP"
             }
           }
         }
@@ -1444,7 +1573,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "ddfs10u6fpc00b"
+        "uid": "cdgce71h6yz28c"
       },
       "description": "",
       "fieldConfig": {
@@ -1504,7 +1633,7 @@
         "h": 8,
         "w": 15,
         "x": 9,
-        "y": 36
+        "y": 35
       },
       "id": 12,
       "interval": "5m",
@@ -1531,10 +1660,12 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "ddfs10u6fpc00b"
+            "uid": "cdgce71h6yz28c"
           },
-          "expr": "topk(5,sum by (path) (count_over_time({job=\"fluentbit\"} | json | path != \"/\" | __error__=\"\" [$__interval])))",
+          "editorMode": "builder",
+          "expr": "topk(10, sum by(request_uri) (count_over_time({job=\"fluentbit\"} | json request_uri | request_uri != `/` | __error__=`` [$__auto])))",
           "legendFormat": "{{path}}",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
@@ -1544,19 +1675,22 @@
         {
           "id": "reduce",
           "options": {
-            "reducers": [
-              "sum"
-            ]
+            "reducers": []
           }
         },
         {
           "id": "organize",
           "options": {
-            "excludeByName": {},
+            "excludeByName": {
+              "Time": true
+            },
+            "includeByName": {},
             "indexByName": {},
             "renameByName": {
               "Field": "Page",
-              "Total": ""
+              "Total": "",
+              "Value #A": "Total",
+              "path": "Page"
             }
           }
         }
@@ -1564,7 +1698,7 @@
       "type": "table"
     }
   ],
-  "refresh": "30s",
+  "refresh": "5m",
   "schemaVersion": 39,
   "tags": [],
   "templating": {
@@ -1577,7 +1711,7 @@
         },
         "datasource": {
           "type": "loki",
-          "uid": "ddfs10u6fpc00b"
+          "uid": "cdgce71h6yz28c"
         },
         "definition": "label_values({job=\"fluentbit\"}, job)",
         "hide": 0,
@@ -1618,6 +1752,6 @@
   "timezone": "",
   "title": "Loki v2 Web Analytics Dashboard for NGINX For Image Caching",
   "uid": "Nz6kKgtGk",
-  "version": 4,
+  "version": 11,
   "weekStart": ""
 }
